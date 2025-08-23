@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Shop - Instagram Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-info h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            font-size: 16px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .product-info button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .product-info button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            nav a {
+                font-size: 14px;
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">Phone Shop</div>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Welcome to Our Phone Store!</h1>
+            <p>Shop the latest smartphones at unbeatable prices.</p>
+        </section>
+
+        <section class="product-grid">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x200?text=iPhone+16" alt="iPhone 16">
+                <div class="product-info">
+                    <h3>iPhone 16 Pro</h3>
+                    <p>$999</p>
+                    <button>Shop Now</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x200?text=Samsung+Galaxy" alt="Samsung Galaxy">
+                <div class="product-info">
+                    <h3>Samsung Galaxy S23</h3>
+                    <p>$799</p>
+                    <button>Shop Now</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x200?text=Google+Pixel" alt="Google Pixel">
+                <div class="product-info">
+                    <h3>Google Pixel 9</h3>
+                    <p>$699</p>
+                    <button>Shop Now</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/300x200?text=Xiaomi+14" alt="Xiaomi 14">
+                <div class="product-info">
+                    <h3>Xiaomi 14</h3>
+                    <p>$599</p>
+                    <button>Shop Now</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Contact us: phone.shop@example.com | Follow us on Instagram @PhoneShopMN</p>
+    </footer>
+</body>
+</html>
