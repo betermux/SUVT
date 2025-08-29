@@ -1,248 +1,326 @@
-<!DOCTYPE html>
-<html lang="mn">
+<!DOCTYPE html><html lang="mn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUVT - Гэр Ахуйн Бараа</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Миний Online Shop</title>
+  <meta name="description" content="Улаан-Хар минимал онлайн дэлгүүр" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0c;         /* үндсэн хар */
+      --panel:#131316;      /* самбарын хар */
+      --muted:#1b1b1f;      /* зөөлөн хар */
+      --text:#e5e7eb;       /* цайвар текст */
+      --subtle:#9ca3af;     /* тодрол багатай */
+      --brand:#ef233c;      /* улаан */
+      --brand-600:#dc1f36;  /* hover улаан */
+      --success:#22c55e;
+      --warn:#f59e0b;
+      --shadow:0 10px 30px rgba(239,35,60,.2);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button{font:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}/* Навбар */
+.nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,11,12,.9),rgba(11,11,12,.7));backdrop-filter:saturate(150%) blur(6px);border-bottom:1px solid #1f1f22}
+.nav-inner{display:flex;align-items:center;gap:14px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
+.logo{width:34px;height:34px;border-radius:12px;background:radial-gradient(120% 120% at 20% 20%,#ff556e, var(--brand) 40%, #7a0b1a);box-shadow:0 8px 24px rgba(239,35,60,.35)}
+.search{flex:1;display:flex;align-items:center;gap:8px;background:var(--muted);border:1px solid #232327;border-radius:14px;padding:10px 12px}
+.search input{flex:1;background:transparent;border:0;outline:0;color:var(--text)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn{background:var(--brand);border:0;color:white;padding:10px 14px;border-radius:14px;font-weight:600;box-shadow:var(--shadow);cursor:pointer;transition:transform .08s ease, background .2s}
+.btn:hover{background:var(--brand-600);transform:translateY(-1px)}
+.icon-btn{position:relative;display:grid;place-items:center;width:44px;height:44px;background:var(--muted);border:1px solid #232327;border-radius:14px;cursor:pointer}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--brand);color:#fff;border-radius:999px;padding:2px 7px;font-size:12px;font-weight:700;box-shadow:var(--shadow)}
 
-        body {
-            background-color: #f5f5f5; /* Саарал цагаан арын өнгө */
-        }
+/* Hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid #1f1f22}
+.hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;padding:42px 0}
+.hero h1{font-size:clamp(28px,4.5vw,48px);line-height:1.05;margin:0 0 10px}
+.hero p{color:var(--subtle);margin:0 0 20px}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero-card{background:linear-gradient(180deg,#141418,#0f0f12);border:1px solid #232327;border-radius:var(--radius);padding:18px}
+.hero-img{border-radius:var(--radius);aspect-ratio:16/10;background:radial-gradient(120% 120% at 70% 10%,rgba(239,35,60,.35),rgba(239,35,60,.12) 35%,transparent 60%), url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop') center/cover;box-shadow:0 20px 50px rgba(239,35,60,.15)}
 
-        /* Header Styles */
-        header {
-            background-color: #fff;
-            padding: 15px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+/* Controls */
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:24px 0}
+.field{display:flex;align-items:center;gap:8px;background:var(--muted);border:1px solid #232327;border-radius:14px;padding:10px 12px}
+select,.range{appearance:none;background:transparent;border:0;color:var(--text);outline:0}
+.pill{background:transparent;border:1px dashed #2a2a30;border-radius:999px;padding:8px 12px;color:var(--subtle)}
 
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+/* Products */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:1000px){.hero-inner{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}.nav-inner{flex-wrap:wrap}}
+.card{background:linear-gradient(180deg,#131316,#101013);border:1px solid #232327;border-radius:var(--radius);overflow:hidden;transition:transform .12s ease, box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.card-img{position:relative;aspect-ratio:1/1;background:#0e0e12}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.price{display:flex;gap:10px;align-items:center;margin:8px 0 0}
+.old{color:#777;text-decoration:line-through}
+.discount{color:#fff;background:linear-gradient(180deg,#ff6b81,var(--brand));padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.card-body{padding:14px}
+.meta{display:flex;justify-content:space-between;align-items:center;color:var(--subtle);font-size:13px}
+.add{margin-top:10px;width:100%}
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #c0a062; /* Алтлаг өнгө */
-            font-family: 'Georgia', serif;
-        }
+/* Cart drawer */
+.drawer{position:fixed;inset:0;pointer-events:none}
+.drawer.show{pointer-events:auto}
+.backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .2s}
+.drawer.show .backdrop{opacity:1}
+.panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:linear-gradient(180deg,#141418,#0f0f12);border-left:1px solid #232327;transform:translateX(100%);transition:transform .25s}
+.drawer.show .panel{transform:translateX(0)}
+.panel header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid #232327}
+.cart-items{padding:12px;height:60vh;overflow:auto}
+.cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;background:#111114;border:1px solid #232327;border-radius:14px;padding:8px;margin-bottom:10px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:28px;height:28px;border-radius:8px;background:var(--muted);border:1px solid #2a2a30;color:#fff;cursor:pointer}
+.panel footer{border-top:1px solid #232327;padding:16px}
+.total{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 
-        nav a {
-            margin-left: 20px;
-            text-decoration: none;
-            color: #333;
-            font-size: 16px;
-        }
+/* Footer */
+footer.site{margin-top:40px;padding:24px 0;border-top:1px solid #1f1f22;color:var(--subtle)}
+.socials{display:flex;gap:10px}
+.socials a{display:grid;place-items:center;width:38px;height:38px;border:1px solid #232327;border-radius:12px;background:var(--muted)}
 
-        nav a:hover {
-            color: #c0a062;
-        }
+/* Tiny helpers */
+.row{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+.tag{font-size:12px;color:#bbb;border:1px solid #2a2a30;border-radius:999px;padding:3px 8px}
 
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        .hero h1 {
-            font-size: 32px;
-            color: #333;
-            margin-bottom: 10px;
-            font-family: 'Georgia', serif;
-        }
-
-        .hero p {
-            font-size: 18px;
-            color: #666;
-        }
-
-        /* Product Grid */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: slideUp 1s ease-in-out;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .product-info {
-            padding: 15px;
-            text-align: center;
-        }
-
-        .product-info h3 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .product-info p {
-            font-size: 16px;
-            color: #c0a062;
-            margin-bottom: 10px;
-        }
-
-        .product-info button {
-            background-color: #c0a062;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-
-        .product-info button:hover {
-            background-color: #a8864a;
-            transform: scale(1.05);
-        }
-
-        /* Footer */
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-        }
-
-        footer p {
-            font-size: 14px;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            0% { transform: translateY(20px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 24px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .logo {
-                font-size: 22px;
-            }
-
-            nav a {
-                font-size: 14px;
-                margin-left: 10px;
-            }
-
-            .product-card img {
-                height: 180px;
-            }
-        }
-    </style>
+  </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo">SUVT</div>
-            <nav>
-                <a href="#home">Нүүр</a>
-                <a href="#products">Бүтээгдэхүүн</a>
-                <a href="#contact">Холбоо барих</a>
-            </nav>
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <div class="logo" aria-hidden="true"></div>
+        <span>RED<span style="color:var(--brand)">•</span>SHOP</span>
+      </a>
+      <div class="search" role="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.35-4.35" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="11" r="7" stroke="#9ca3af" stroke-width="2"/></svg>
+        <input id="search" type="search" placeholder="Хайх… (жишээ: пүүз)" />
+      </div>
+      <div class="nav-actions">
+        <button id="openCart" class="icon-btn" aria-label="Сагс нээх">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z" stroke="#e5e7eb" stroke-width="1.7"/><circle cx="9" cy="20" r="1.4" fill="#e5e7eb"/><circle cx="18" cy="20" r="1.4" fill="#e5e7eb"/></svg>
+          <span id="cartCount" class="badge">0</span>
+        </button>
+        <a class="btn" href="#products">Бүтээгдэхүүн</a>
+      </div>
+    </div>
+  </nav>  <!-- HERO -->  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-card">
+        <span class="tag">Шинэ коллекц</span>
+        <h1>Улаан × Хар минимал стиль — <span style="color:var(--brand)">Flash Sale</span> 48 цаг!</h1>
+        <p>Сагсална 👇 код: <b>RED90</b> — 90,000₮-с дээш үнэтэй бараанд 9% хямдрал today only.</p>
+        <div class="cta">
+          <a class="btn" href="#products">Одоо үзэх</a>
+          <a class="pill" href="#contact">Холбогдох</a>
         </div>
-    </header>
+      </div>
+      <div class="hero-img" aria-hidden="true"></div>
+    </div>
+  </section>  <main class="container">
+    <!-- CONTROLS -->
+    <div class="controls" id="controls">
+      <div class="field">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+        <select id="category">
+          <option value="all">Бүх ангилал</option>
+          <option value="sneaker">Пүүз</option>
+          <option value="hoodie">Худи</option>
+          <option value="watch">Цаг</option>
+          <option value="bag">Цүнх</option>
+        </select>
+      </div>
+      <div class="field">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+        <select id="sort">
+          <option value="popular">Эрэмбэ: Популяр</option>
+          <option value="price-asc">Үнэ: бага → их</option>
+          <option value="price-desc">Үнэ: их → бага</option>
+        </select>
+      </div>
+      <div class="spacer"></div>
+      <span class="pill">Дотоод хүргэлт • 24–72 цаг</span>
+    </div><!-- PRODUCTS -->
+<section id="products" class="grid" aria-live="polite"></section>
 
-    <main class="container">
-        <section class="hero">
-            <h1>SUVT-д Тавтай Морил!</h1>
-            <p>Гэрт тань тав тух, загвар нэмнэ</p>
-        </section>
+<!-- CONTACT -->
+<section id="contact" style="margin-top:36px">
+  <div class="hero-card">
+    <h2 style="margin:0 0 8px">Холбоо барих</h2>
+    <div class="row">
+      <div class="tag">Facebook: @redshop.mn</div>
+      <div class="tag">Instagram: @redshop</div>
+      <div class="tag">Утас: +976 9911-2233</div>
+    </div>
+  </div>
+</section>
 
-        <section class="product-grid">
-            <div class="product-card">
-                <img src="assets/vacuumfood.png" alt="Хүнсний вакуум хадгалагч">
-                <div class="product-info">
-                    <h3>Хүнсний Вакуум Хадгалагч</h3>
-                    <p>₮59,900</p>
-                    <button>Одоо Худалдаж Авах</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300x200?text=Carpet" alt="Хивс">
-                <div class="product-info">
-                    <h3>Загварлаг Хивс</h3>
-                    <p>₮129,900</p>
-                    <button>Одоо Худалдаж Авах</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300x200?text=Kitchen+Utensils" alt="Гал тогооны хэрэгсэл">
-                <div class="product-info">
-                    <h3>Гал Тогооны Хэрэгслийн Иж Бүрдэл</h3>
-                    <p>₮79,900</p>
-                    <button>Одоо Худалдаж Авах</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="https://via.placeholder.com/300x200?text=Decor+Candle" alt="Гоёлын лаа">
-                <div class="product-info">
-                    <h3>Гоёлын Анхилуун Лаа</h3>
-                    <p>₮29,900</p>
-                    <button>Одоо Худалдаж Авах</button>
-                </div>
-            </div>
-        </section>
-    </main>
+  </main>  <!-- FOOTER -->  <footer class="site">
+    <div class="container row" style="justify-content:space-between">
+      <div>© <span id="year"></span> RED•SHOP — Бүх эрх хамгаалагдсан.</div>
+      <div class="socials">
+        <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 8h-2a2 2 0 00-2 2v10" stroke="#e5e7eb" stroke-width="2"/><path d="M9 13h6" stroke="#e5e7eb" stroke-width="2"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#e5e7eb" stroke-width="2"/><circle cx="16.5" cy="7.5" r="1" fill="#e5e7eb"/><circle cx="12" cy="12" r="3.5" stroke="#e5e7eb" stroke-width="2"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 3v6a6 6 0 11-4.5 10.3" stroke="#e5e7eb" stroke-width="2"/></svg></a>
+      </div>
+    </div>
+  </footer>  <!-- CART DRAWER -->  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="backdrop" id="closeCart" tabindex="0" aria-label="Сагс хаах"></div>
+    <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <header>
+        <h3 id="cartTitle" style="margin:0">Таны сагс</h3>
+        <button id="closeCartBtn" class="icon-btn" aria-label="Сагс хаах">✕</button>
+      </header>
+      <div id="cart" class="cart-items"></div>
+      <footer>
+        <div class="total"><strong>Нийт:</strong> <strong id="total">0₮</strong></div>
+        <button id="checkout" class="btn" style="width:100%">Захиалах</button>
+      </footer>
+    </aside>
+  </div>  <script>
+    // ----- SAMPLE DATA (та өөрийн API/JSON-оор солино) -----
+    const PRODUCTS = [
+      {id:1, name:'Red Runner пүүз', price:199000, old:239000, img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=900&auto=format&fit=crop', cat:'sneaker'},
+      {id:2, name:'Shadow Hoodie', price:129000, old:0, img:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=900&auto=format&fit=crop', cat:'hoodie'},
+      {id:3, name:'Crimson Watch', price:299000, old:349000, img:'https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=900&auto=format&fit=crop', cat:'watch'},
+      {id:4, name:'Urban Sling цүнх', price:89000, old:0, img:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=900&auto=format&fit=crop', cat:'bag'},
+      {id:5, name:'Noir Hoodie', price:119000, old:139000, img:'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?q=80&w=900&auto=format&fit=crop', cat:'hoodie'},
+      {id:6, name:'Volt Runner пүүз', price:209000, old:239000, img:'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=900&auto=format&fit=crop', cat:'sneaker'},
+      {id:7, name:'Minimal Watch', price:259000, old:0, img:'https://images.unsplash.com/photo-1526045478516-99145907023c?q=80&w=900&auto=format&fit=crop', cat:'watch'},
+      {id:8, name:'Everyday Pack', price:149000, old:169000, img:'https://images.unsplash.com/photo-1514477917009-389c76a86b68?q=80&w=900&auto=format&fit=crop', cat:'bag'},
+    ];
 
-    <footer>
-        <p>Холбоо барих: suvt.shop@example.com | Instagram: @SUVT_Shop</p>
-    </footer>
-</body>
+    // ----- STATE -----
+    const state = {query:'', category:'all', sort:'popular', cart:new Map()};
+
+    // ----- HELPERS -----
+    const format = n => new Intl.NumberFormat('mn-MN').format(n) + '₮';
+
+    function renderProducts(){
+      const grid = document.querySelector('#products');
+      let items = [...PRODUCTS];
+      // filter by query
+      if(state.query){
+        const q = state.query.toLowerCase();
+        items = items.filter(p => p.name.toLowerCase().includes(q));
+      }
+      // filter by category
+      if(state.category !== 'all') items = items.filter(p => p.cat === state.category);
+      // sort
+      if(state.sort === 'price-asc') items.sort((a,b)=>a.price-b.price);
+      if(state.sort === 'price-desc') items.sort((a,b)=>b.price-a.price);
+      // template
+      grid.innerHTML = items.map(p=>`
+        <article class="card" data-id="${p.id}" data-cat="${p.cat}" data-price="${p.price}">
+          <div class="card-img">
+            <img loading="lazy" src="${p.img}" alt="${p.name}"/>
+          </div>
+          <div class="card-body">
+            <div class="meta"><span class="tag">${p.cat}</span><span>#${p.id.toString().padStart(4,'0')}</span></div>
+            <h3 style="margin:8px 0 6px;font-size:16px">${p.name}</h3>
+            <div class="price">
+              <strong>${format(p.price)}</strong>
+              ${p.old?`<span class="old">${format(p.old)}</span><span class="discount">-${Math.round((1-p.price/p.old)*100)}%</span>`:''}
+            </div>
+            <button class="btn add" data-add="${p.id}">Сагслах</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function updateBadge(){
+      const count = [...state.cart.values()].reduce((s, it)=>s+it.qty, 0);
+      document.querySelector('#cartCount').textContent = count;
+    }
+
+    function renderCart(){
+      const box = document.querySelector('#cart');
+      const list = [...state.cart.values()];
+      if(!list.length){ box.innerHTML = '<p style="color:#9ca3af">Сагс хоосон байна.</p>'; document.querySelector('#total').textContent = '0₮'; updateBadge(); return; }
+      box.innerHTML = list.map(it=>`
+        <div class="cart-item" data-id="${it.id}">
+          <img src="${it.img}" alt="${it.name}" style="width:64px;height:64px;object-fit:cover;border-radius:10px"/>
+          <div>
+            <div style="font-weight:600">${it.name}</div>
+            <div class="row" style="margin-top:4px"><span class="tag">${format(it.price)}</span></div>
+          </div>
+          <div class="qty">
+            <button data-dec="${it.id}">–</button>
+            <strong>${it.qty}</strong>
+            <button data-inc="${it.id}">+</button>
+          </div>
+        </div>
+      `).join('');
+      const total = list.reduce((s,it)=>s+it.price*it.qty,0);
+      document.querySelector('#total').textContent = format(total);
+      updateBadge();
+    }
+
+    function addToCart(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      const ex = state.cart.get(id) || {qty:0, ...p};
+      ex.qty += 1;
+      state.cart.set(id, ex);
+      renderCart();
+    }
+
+    function changeQty(id, delta){
+      const it = state.cart.get(id); if(!it) return;
+      it.qty += delta; if(it.qty<=0) state.cart.delete(id);
+      renderCart();
+    }
+
+    // ----- EVENTS -----
+    document.querySelector('#year').textContent = new Date().getFullYear();
+
+    document.addEventListener('click', e=>{
+      const add = e.target.closest('[data-add]');
+      if(add){ addToCart(Number(add.dataset.add)); }
+      const inc = e.target.closest('[data-inc]');
+      if(inc){ changeQty(Number(inc.dataset.inc), +1); }
+      const dec = e.target.closest('[data-dec]');
+      if(dec){ changeQty(Number(dec.dataset.dec), -1); }
+    });
+
+    document.querySelector('#search').addEventListener('input', e=>{ state.query = e.target.value.trim(); renderProducts(); });
+    document.querySelector('#category').addEventListener('change', e=>{ state.category = e.target.value; renderProducts(); });
+    document.querySelector('#sort').addEventListener('change', e=>{ state.sort = e.target.value; renderProducts(); });
+
+    // Drawer open/close
+    const drawer = document.querySelector('#drawer');
+    const openBtn = document.querySelector('#openCart');
+    const closeBtn = document.querySelector('#closeCartBtn');
+    const closeBackdrop = document.querySelector('#closeCart');
+    const toggleDrawer = (open)=>{
+      drawer.classList.toggle('show', open);
+      drawer.setAttribute('aria-hidden', String(!open));
+      if(open) document.body.style.overflow='hidden'; else document.body.style.overflow='';
+    }
+    openBtn.addEventListener('click', ()=>{ renderCart(); toggleDrawer(true); });
+    closeBtn.addEventListener('click', ()=> toggleDrawer(false));
+    closeBackdrop.addEventListener('click', ()=> toggleDrawer(false));
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') toggleDrawer(false); });
+
+    // Checkout demo
+    document.querySelector('#checkout').addEventListener('click', ()=>{
+      if(!state.cart.size) return alert('Сагс хоосон байна.');
+      alert('Таны захиалгыг хүлээн авлаа! (Demo)');
+      state.cart.clear(); renderCart(); toggleDrawer(false);
+    });
+
+    // Initial
+    renderProducts();
+  </script></body>
 </html>
