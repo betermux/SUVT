@@ -1,183 +1,47 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Онлайн дэлгүүр - Улаан/Хар сэдэв</title>
-  <meta name="description" content="Хялбар, хурдан онлайн дэлгүүр — улаан-хар өнгөтэй загвар" />
-  <link rel="icon" href="./assets/khalk.png" />
-  <style>
-    :root{
-      --red:#d32f2f;
-      --dark:#0b0b0b;
-      --muted:#f5f5f5;
-      --glass: rgba(255,255,255,0.04);
-      --card-shadow: 0 6px 18px rgba(11,11,11,0.45);
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#0b0b0b; color:#fff; line-height:1.5;}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}.container{max-width:1200px;margin:0 auto;padding:16px}
-
-header{background:#111;position:sticky;top:0;z-index:1000}
-.nav{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:8px 0}
-.brand{display:flex;gap:8px;align-items:center}
-.brand img{width:40px;height:40px;border-radius:8px;object-fit:cover}
-.brand h1{font-size:18px;margin:0;color:var(--red)}
-
-.search{flex:1;min-width:180px}
-.search input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#0b0b0b;color:#fff;font-size:14px}
-
-.nav-actions{display:flex;gap:6px;align-items:center}
-.btn{background:var(--red);color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;border:none;font-weight:600;font-size:14px}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.15)}
-
-.hero{display:flex;flex-direction:column;gap:18px;padding:20px 0}
-.hero-card{background:#111;padding:18px;border-radius:12px;box-shadow:var(--card-shadow)}
-.hero h2{font-size:24px;margin-bottom:8px;color:var(--red)}
-.hero p{margin-bottom:12px;color:#ccc;font-size:14px}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
-.card{background:#111;padding:10px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.6)}
-.card .thumb{height:120px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000}
-.card h3{margin:8px 0 4px;font-size:14px}
-.price{font-weight:700;color:var(--red);font-size:14px}
-.card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px}
-
-.cart-btn{position:relative}
-.cart-count{position:absolute;right:-6px;top:-6px;background:var(--red);width:18px;height:18px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}
-
-.modal{position:fixed;right:10px;bottom:10px;left:10px;max-width:360px;margin:auto;background:#111;border-radius:12px;padding:12px;box-shadow:0 16px 40px rgba(0,0,0,0.8);display:none;z-index:2000}
-.modal.open{display:block}
-.modal h4{margin:0 0 8px;font-size:16px}
-.modal .line{height:1px;background:rgba(255,255,255,0.1);margin:8px 0}
-
-footer{padding:18px 0;color:#bbb;text-align:center;border-top:1px solid rgba(255,255,255,0.1);margin-top:24px;font-size:12px}
-
-@media (min-width:768px){
-  .hero{flex-direction:row}
-  .hero-card{flex:1}
-  .hero aside{flex:1}
-}
-
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khalk Shop</title>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <div class="brand">
-        <img src="./assets/khalk.png" alt="Лого">
-        <h1>Khalk Shop</h1>
-      </div><div class="search">
-    <input id="searchInput" placeholder="Бараа хайх..." />
-  </div>
+  <h1>Khalk Shop</h1>
+  <ul id="productGrid"></ul>
 
-  <div class="nav-actions">
-    <button class="btn ghost" onclick="filterCategory('all')">Бүгд</button>
-    <button class="btn" onclick="openCart()">Сагс <span class="cart-count" id="cartCount">0</span></button>
-  </div>
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  </header>  <main class="container">
-    <section class="hero">
-      <div class="hero-card">
-        <h2>Онлайн дэлгүүр</h2>
-        <p>Мобайлд бүрэн тохирсон улаан-Хар загвар.</p>
-        <button class="btn" onclick="scrollToProducts()">Барааг үзэх</button>
-      </div>
-      <aside class="hero-card">
-        <p style="font-size:13px;color:#ccc">Тусгай санал: шинэ хэрэглэгчдэд 10% хөнгөлөлт</p>
-      </aside>
-    </section><section id="products">
-  <h3 style="margin:8px 0;color:#fff;font-size:18px">Бараа</h3>
-  <div class="grid" id="productGrid"></div>
-</section>
+const firebaseConfig = {
+  apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+  authDomain: "khalkh-store.firebaseapp.com",
+  databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+  projectId: "khalkh-store",
+  storageBucket: "khalkh-store.appspot.com",
+  messagingSenderId: "205879441792",
+  appId: "1:205879441792:web:fb71f2c84f8c16b36a2965",
+  measurementId: "G-DHB8PQZ514"
+};
 
-  </main>  <div class="modal" id="cartModal">
-    <h4>Таны сагс</h4>
-    <div id="cartItems"></div>
-    <div class="line"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="font-weight:700">Нийт: <span id="cartTotal">₮0</span></div>
-      <button class="btn" onclick="checkout()">Төлбөр</button>
-    </div>
-  </div>  <footer>
-    <div class="container">© Khalk Shop — Бүх эрх хуулиар хамгаалагдсан</div>
-  </footer>  <script>
-    const products = [
-      {id:1,name:'Утас - Model A',price:259000, img:'./assets/product1.jpg',tag:'hot'},
-      {id:2,name:'Цамц - Хар',price:45000, img:'./assets/product2.jpg',tag:'clothing'},
-      {id:3,name:'Плед - Улаан',price:32000, img:'./assets/product3.jpg',tag:'home'},
-      {id:4,name:'Чихэвч',price:12000, img:'./assets/product4.jpg',tag:'electronics'}
-    ];
-    let cart = {};
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
-    function renderProducts(list){
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML='';
-      list.forEach(p=>{
-        const card = document.createElement('div'); card.className='card';
-        card.innerHTML = `
-          <div class="thumb"><img src="${p.img}" alt="${p.name}" /></div>
-          <h3>${p.name}</h3>
-          <div class="meta">
-            <div class="price">₮${p.price.toLocaleString()}</div>
-            <button class="btn ghost" style="padding:4px 8px;font-size:12px" onclick="addToCart(${p.id})">+ Сагс</button>
-          </div>`;
-        grid.appendChild(card);
-      })
-    }
-
-    function addToCart(id){
-      cart[id] = cart[id] ? cart[id]+1 : 1;
-      updateCartUI();
-      openCart();
-    }
-
-    function updateCartUI(){
-      const count = Object.values(cart).reduce((s,n)=>s+n,0);
-      document.getElementById('cartCount').textContent = count;
-      const itemsDiv = document.getElementById('cartItems');
-      itemsDiv.innerHTML='';
-      let total = 0;
-      for(const id in cart){
-        const prod = products.find(p=>p.id==id);
-        const qty = cart[id];
-        total += prod.price * qty;
-        const row = document.createElement('div');
-        row.style.display='flex';row.style.justifyContent='space-between';row.style.marginBottom='6px';
-        row.innerHTML = `<div style="font-size:13px">${prod.name} x ${qty}</div><div>₮${(prod.price*qty).toLocaleString()}</div>`;
-        itemsDiv.appendChild(row);
-      }
-      document.getElementById('cartTotal').textContent = '₮'+total.toLocaleString();
-    }
-
-    function openCart(){
-      document.getElementById('cartModal').classList.toggle('open');
-    }
-
-    function checkout(){
-      if(Object.keys(cart).length===0){alert('Сагс хоосон байна');return}
-      alert('Төлбөр хийх жишээ: '+document.getElementById('cartTotal').textContent);
-    }
-
-    function filterCategory(tag){
-      if(tag==='all') renderProducts(products);
-      else renderProducts(products.filter(p=>p.tag===tag));
-    }
-
-    function scrollToProducts(){
-      document.getElementById('products').scrollIntoView({behavior:'smooth'});
-    }
-
-    document.getElementById('searchInput').addEventListener('input', (e)=>{
-      const q = e.target.value.toLowerCase();
-      if(!q) renderProducts(products);
-      else renderProducts(products.filter(p=>p.name.toLowerCase().includes(q)||p.tag.toLowerCase().includes(q)));
-    });
-
-    renderProducts(products);
-    updateCartUI();
-  </script></body>
+// Бараа унших
+const productRef = ref(database, "products");
+onValue(productRef, snapshot => {
+  const list = document.getElementById("productGrid");
+  list.innerHTML = "";
+  snapshot.forEach(child => {
+    const data = child.val();
+    const li = document.createElement("li");
+    li.innerHTML = `<img src="${data.image}" width="100"><br>
+                    <b>${data.name}</b><br>
+                    ${data.desc}<br>
+                    ${data.price}₮`;
+    list.appendChild(li);
+  });
+});
+</script>
+</body>
 </html>
