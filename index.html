@@ -1,113 +1,168 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Khalk Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 <style>
-body {
-  margin:0;
-  font-family:'Roboto',sans-serif;
-  background:#121212;
-  color:#fff;
-}
-
-header {
-  background: none; /* Улаан box-ыг хасав */
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border-bottom:1px solid #333;
-}
-header img { height:40px; }
-header h1 { font-size:1.4rem; margin:0; font-weight:700; color:#fff; }
-
-.products {
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:15px;
-}
-.product {
-  background:#1e1e1e;
-  padding:12px;
-  border-radius:12px;
-  text-align:center;
-  transition:transform 0.15s ease;
-}
-.product:hover{ transform:scale(1.02); }
-.product img{ width:100%; max-width:200px; border-radius:10px; }
-.btn{
-  background:#d32f2f; color:#fff;
-  padding:8px 16px; border:none; border-radius:6px;
-  cursor:pointer; font-size:0.9rem; transition:background 0.2s;
-}
-.btn:hover{ background:#b71c1c; }
-
-@media(min-width:600px){
-  .products{ flex-direction:row; flex-wrap:wrap; justify-content:center; }
-  .product{ width:180px; }
-}
-
-/* Overlay & Panel */
-#overlay{
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.5); opacity:0; pointer-events:none;
-  transition:opacity 0.3s ease; z-index:999;
-}
-#overlay.show{ opacity:1; pointer-events:all; }
-
-#order-panel{
-  position:fixed; top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  background:#1e1e1e;
-  padding:25px 30px;
-  border-radius:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.7);
-  z-index:1000;
-  transition:transform 0.3s ease, opacity 0.3s;
-  width:90%; max-width:320px;
-}
-#order-panel.show{ transform:translate(-50%,-50%) scale(1); }
-
-#order-panel h3{
-  margin-top:0; margin-bottom:15px;
-  text-align:center; font-size:1.2rem; font-weight:700;
-  color:#fff;
-}
-
-#order-panel input{
-  width:100%; padding:10px 12px; margin-bottom:12px;
-  border-radius:8px; border:1px solid #333;
-  background:#2a2a2a; color:#fff; font-size:0.95rem;
-}
-
-#order-panel .submit-btn{
-  width:100%; padding:12px; border:none; border-radius:8px;
-  background:#d32f2f; color:#fff; font-size:1rem; cursor:pointer;
-  transition:background 0.2s;
-}
-#order-panel .submit-btn:hover{ background:#b71c1c; }
-
-#panel-message{
-  position:fixed; top:15px; left:50%;
-  transform:translateX(-50%) translateY(-120%);
-  background-color:#00a600; color:#fff;
-  padding:12px 20px; border-radius:8px;
-  opacity:0; transition: transform 0.3s, opacity 0.3s;
-  z-index:1001;
-  font-weight:500;
-}
-#panel-message.show{ transform:translateX(-50%) translateY(0); opacity:1; }
-
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #121212;
+    color: #fff;
+  }
+  header {
+    background: none;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #333;
+  }
+  header img {
+    height: 40px;
+  }
+  header h1 {
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 700;
+    color: #fff;
+  }
+  .products {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+  }
+  .product {
+    background: #1e1e1e;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.15s ease;
+  }
+  .product:hover {
+    transform: scale(1.02);
+  }
+  .product img {
+    width: 100%;
+    max-width: 200px;
+    border-radius: 10px;
+  }
+  .btn {
+    background: #d32f2f;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .btn:hover {
+    background: #b71c1c;
+  }
+  @media (min-width: 600px) {
+    .products {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .product {
+      width: 180px;
+    }
+  }
+  /* Overlay & Panel */
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+  }
+  #overlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #order-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #1e1e1e;
+    padding: 25px 30px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s;
+    width: 90%;
+    max-width: 320px;
+  }
+  #order-panel.show {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  #order-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  #order-panel input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #2a2a2a;
+    color: #fff;
+    font-size: 0.95rem;
+  }
+  #order-panel .submit-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #d32f2f;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  #order-panel .submit-btn:hover {
+    background: #b71c1c;
+  }
+  #panel-message {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-120%);
+    background-color: #00a600;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 1001;
+    font-weight: 500;
+  }
+  #panel-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <img src="assets/khalk.png" alt="Khalk Logo">
+  <img src="assets/khalk.png" alt="Khalk Logo" />
   <h1>Khalk Store</h1>
 </header>
 
@@ -117,88 +172,147 @@ header h1 { font-size:1.4rem; margin:0; font-weight:700; color:#fff; }
 
 <div id="order-panel">
   <h3>Захиалга</h3>
-  <input type="text" id="customer-name" placeholder="Нэр">
-  <input type="text" id="customer-phone" placeholder="Утас">
+  <input type="text" id="customer-name" placeholder="Нэр" />
+  <input type="text" id="customer-phone" placeholder="Утас" />
   <button class="submit-btn" id="submit-order">Захиалах</button>
 </div>
 
 <div id="panel-message"></div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey:"AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
-  authDomain:"khalkh-store.firebaseapp.com",
-  databaseURL:"https://khalkh-store-default-rtdb.firebaseio.com",
-  projectId:"khalkh-store",
-  storageBucket:"khalkh-store.appspot.com",
-  messagingSenderId:"205879441792",
-  appId:"1:205879441792:web:677a6abe7912d6436a2965"
-};
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+    authDomain: "khalkh-store.firebaseapp.com",
+    databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+    projectId: "khalkh-store",
+    storageBucket: "khalkh-store.appspot.com",
+    messagingSenderId: "205879441792",
+    appId: "1:205879441792:web:677a6abe7912d6436a2965"
+  };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-const productsData=[
-  {id:1,name:"Бараа 1",price:10000,img:"https://via.placeholder.com/200x200?text=Product+1"},
-  {id:2,name:"Бараа 2",price:15000,img:"https://via.placeholder.com/200x200?text=Product+2"},
-  {id:3,name:"Бараа 3",price:20000,img:"https://via.placeholder.com/200x200?text=Product+3"}
-];
+  // Product data
+  const productsData = [
+    { id: 1, name: "Бараа 1", price: 10000, img: "https://via.placeholder.com/200x200?text=Product+1" },
+    { id: 2, name: "Бараа 2", price: 15000, img: "https://via.placeholder.com/200x200?text=Product+2" },
+    { id: 3, name: "Бараа 3", price: 20000, img: "https://via.placeholder.com/200x200?text=Product+3" }
+  ];
 
-const productsDiv=document.getElementById('products');
-const orderPanel=document.getElementById('order-panel');
-const overlay=document.getElementById('overlay');
-const panelMessage=document.getElementById('panel-message');
+  const productsDiv = document.getElementById("products");
+  const orderPanel = document.getElementById("order-panel");
+  const overlay = document.getElementById("overlay");
+  const panelMessage = document.getElementById("panel-message");
+  const submitOrderBtn = document.getElementById("submit-order");
+  const customerNameInput = document.getElementById("customer-name");
+  const customerPhoneInput = document.getElementById("customer-phone");
 
-let selectedProduct=null;
+  let selectedProduct = null;
 
-function renderProducts(){
-  productsDiv.innerHTML='';
-  productsData.forEach(p=>{
-    const div=document.createElement('div');
-    div.className='product';
-    div.innerHTML=`
-      <img src="${p.img}" alt="${p.name}">
-      <h4>${p.name}</h4>
-      <p>${p.price}₮</p>
-      <button class="btn" onclick="openOrderPanel(${p.id})">Захиалах</button>
-    `;
-    productsDiv.appendChild(div);
+  // Render products on page
+  function renderProducts() {
+    productsDiv.innerHTML = "";
+    productsData.forEach((p) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${p.img}" alt="${p.name}" />
+        <h4>${p.name}</h4>
+        <p>${p.price.toLocaleString()}₮</p>
+        <button class="btn" data-id="${p.id}">Захиалах</button>
+      `;
+      productsDiv.appendChild(div);
+    });
+
+    // Add event listeners to buttons
+    document.querySelectorAll(".btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = parseInt(btn.getAttribute("data-id"));
+        openOrderPanel(id);
+      });
+    });
+  }
+
+  // Open order panel for selected product
+  function openOrderPanel(id) {
+    selectedProduct = productsData.find((p) => p.id === id);
+    if (!selectedProduct) {
+      showPanel("Бараа олдсонгүй", false);
+      return;
+    }
+    overlay.classList.add("show");
+    orderPanel.classList.add("show");
+    // Clear previous inputs
+    customerNameInput.value = "";
+    customerPhoneInput.value = "";
+    customerNameInput.focus();
+  }
+
+  // Close order panel when clicking overlay
+  overlay.addEventListener("click", () => {
+    overlay.classList.remove("show");
+    orderPanel.classList.remove("show");
   });
-}
 
-window.openOrderPanel=function(id){
-  selectedProduct=productsData.find(p=>p.id===id);
-  overlay.classList.add('show');
-  orderPanel.classList.add('show');
-}
+  // Show message panel
+  function showPanel(message, success) {
+    panelMessage.textContent = message;
+    panelMessage.style.backgroundColor = success ? "#00a600" : "#aa0000";
+    panelMessage.classList.add("show");
+    setTimeout(() => {
+      panelMessage.classList.remove("show");
+    }, 2500);
+  }
 
-overlay.addEventListener('click',()=>{overlay.classList.remove('show');orderPanel.classList.remove('show');});
+  // Submit order handler
+  submitOrderBtn.addEventListener("click", () => {
+    const name = customerNameInput.value.trim();
+    const phone = customerPhoneInput.value.trim();
 
-document.getElementById('submit-order').addEventListener('click',()=>{
-  const name=document.getElementById('customer-name').value.trim();
-  const phone=document.getElementById('customer-phone').value.trim();
-  if(!name||!phone){ showPanel("Мэдээлэл дутуу байна",false); return; }
+    if (!name || !phone) {
+      showPanel("Мэдээлэл дутуу байна", false);
+      return;
+    }
 
-  push(ref(db,'orders'),{
-    customerName:name, phone:phone,
-    item:selectedProduct, timestamp:Date.now()
-  }).then(()=>{
-    showPanel(`${selectedProduct.name} захиалга амжилттай!`,true);
-    overlay.classList.remove('show'); orderPanel.classList.remove('show');
-  }).catch(err=>{ console.error("Firebase алдаа:",err); showPanel("Алдаа гарлаа",false); });
-});
+    if (!selectedProduct) {
+      showPanel("Бараа сонгогдоогүй байна", false);
+      return;
+    }
 
-function showPanel(message,success){
-  panelMessage.textContent=message;
-  panelMessage.style.backgroundColor=success?"#00a600":"#aa0000";
-  panelMessage.classList.add("show");
-  setTimeout(()=>{panelMessage.classList.remove("show");},2500);
-}
+    // Prepare order data
+    const orderData = {
+      customerName: name,
+      phone: phone,
+      item: selectedProduct,
+      timestamp: Date.now()
+    };
 
-renderProducts();
+    console.log("Sending order data:", orderData);
+
+    // Push order to Firebase Realtime Database
+    push(ref(db, "orders"), orderData)
+      .then(() => {
+        showPanel(`${selectedProduct.name} захиалга амжилттай!`, true);
+        overlay.classList.remove("show");
+        orderPanel.classList.remove("show");
+        // Clear inputs after success
+        customerNameInput.value = "";
+        customerPhoneInput.value = "";
+      })
+      .catch((err) => {
+        console.error("Firebase алдаа:", err);
+        showPanel("Алдаа гарлаа", false);
+      });
+  });
+
+  // Initial render
+  renderProducts();
 </script>
 
 </body>
