@@ -146,9 +146,56 @@ body.shop-active #cart-icon {
     border-top: 1px solid #333;
     font-weight: bold;
 }
+
+/* Custom Alerts */
+#alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's on top of everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center alerts horizontally */
+    padding-top: 10px;
+    pointer-events: none; /* Allow clicks to pass through the container */
+}
+
+.custom-alert {
+    padding: 12px 25px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: auto; /* Re-enable pointer events for the alert itself */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    max-width: 90%; /* Prevent alerts from being too wide on large screens */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.custom-alert.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.custom-alert.success {
+    background-color: rgba(76, 175, 80, 0.1); /* Light green background */
+    color: #4CAF50; /* Green text */
+    border: 1px solid #4CAF50; /* Green outline */
+}
+
+.custom-alert.failure {
+    background-color: rgba(244, 67, 54, 0.1); /* Light red background */
+    color: #F44336; /* Red text */
+    border: 1px solid #F44336; /* Red outline */
+}
 </style>
 </head>
 <body>
+<div id="alert-container"></div> <!-- New alert container -->
 <header>
     <img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
     <div id="user-phone"></div>
@@ -244,6 +291,30 @@ let isLogin = true;
 
 // --- Functions ---
 
+// New function to display custom alerts
+function showCustomAlert(message, type = 'success', duration = 3000) {
+    const alertContainer = document.getElementById('alert-container');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `custom-alert ${type}`;
+    alertDiv.textContent = message;
+
+    alertContainer.appendChild(alertDiv);
+
+    // Trigger animation
+    setTimeout(() => {
+        alertDiv.classList.add('show');
+    }, 10); // Small delay to ensure CSS transition applies
+
+    // Hide and remove after duration
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        alertDiv.addEventListener('transitionend', () => {
+            alertDiv.remove();
+        }, { once: true }); // Ensure it only runs once
+    }, duration);
+}
+
+
 // Function to update cart display
 function updateCartDisplay() {
     cartItemsDiv.innerHTML = '';
@@ -288,7 +359,7 @@ switchAuth.addEventListener('click', () => {
 authButton.addEventListener('click', async () => {
   const phone = document.getElementById('phone').value;
   const password = document.getElementById('password').value;
-  if(phone === '' || password === '') { alert('Бүх талбарыг бөглөнө үү!'); return; }
+  if(phone === '' || password === '') { showCustomAlert('Бүх талбарыг бөглөнө үү!', 'failure'); return; }
 
   const userRef = ref(database, 'users/' + phone);
 
@@ -305,25 +376,25 @@ authButton.addEventListener('click', async () => {
         // Auth → Shop
         document.getElementById('auth-container').style.display = 'none';
         shopContainer.style.display = 'block';
-        alert(`Амжилттай нэвтэрлээ: ${phone}`);
+        showCustomAlert(`Амжилттай нэвтэрлээ: ${phone}`, 'success');
 
         // Load user's cart immediately after login
         await loadCartFromFirebase(currentUserPhone);
 
       } else {
-        alert('Дугаар эсвэл нууц үг буруу!');
+        showCustomAlert('Дугаар эсвэл нууц үг буруу!', 'failure');
       }
     } catch (error) {
         console.error("Login error:", error);
-        alert('Нэвтрэхэд алдаа гарлаа!');
+        showCustomAlert('Нэвтрэхэд алдаа гарлаа!', 'failure');
     }
   } else {
     try {
       await set(userRef, { password: password });
-      alert(`Амжилттай бүртгүүллээ: ${phone}`);
+      showCustomAlert(`Амжилттай бүртгүүллээ: ${phone}`, 'success');
     } catch (error) {
       console.error("Registration error:", error);
-      alert('Бүртгүүлэхэд алдаа гарлаа!');
+      showCustomAlert('Бүртгүүлэхэд алдаа гарлаа!', 'failure');
     }
   }
 
@@ -334,7 +405,7 @@ authButton.addEventListener('click', async () => {
 // Add to cart
 document.querySelectorAll('.product-card button').forEach((btn)=>{
   btn.addEventListener('click', async ()=>{
-    if(!currentUserPhone){ alert('Нэвтэрсэн байх шаардлагатай!'); return; }
+    if(!currentUserPhone){ showCustomAlert('Нэвтэрсэн байх шаардлагатай!', 'failure'); return; }
 
     const productCard = btn.parentElement;
     const productName = productCard.querySelector('h3').innerText;
@@ -353,10 +424,10 @@ document.querySelectorAll('.product-card button').forEach((btn)=>{
     const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
     try {
         await set(cartRef, userCart); // Save the entire updated cart array
-        alert(`${productName} сагсанд нэмэгдлээ!`);
+        showCustomAlert(`${productName} сагсанд нэмэгдлээ!`, 'success');
     } catch (error) {
         console.error("Error adding to cart:", error);
-        alert('Сагсанд нэмэхэд алдаа гарлаа!');
+        showCustomAlert('Сагсанд нэмэхэд алдаа гарлаа!', 'failure');
     }
   });
 });
