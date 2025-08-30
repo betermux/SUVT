@@ -1,223 +1,170 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Khalk Store</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
       background: #111;
       color: #eee;
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      text-align: center;
     }
     header {
+      padding: 15px;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      padding: 10px 20px;
-      background: #000;
+      border-bottom: 1px solid #222;
     }
     header img {
-      height: 40px;
+      width: 40px; height: 40px;
     }
-    header h1 {
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .container {
+    .product {
+      margin: 20px auto;
       padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    .item {
       background: #1c1c1c;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-      transition: transform 0.2s;
+      border-radius: 12px;
+      max-width: 400px;
     }
-    .item:hover {
-      transform: translateY(-5px);
-    }
-    .item img {
+    .product img {
       width: 100%;
-      border-radius: 10px;
+      border-radius: 12px;
     }
-    .btn {
-      display: inline-block;
-      padding: 10px 15px;
-      margin-top: 10px;
-      background: crimson;
+    button {
+      padding: 10px 20px;
       border: none;
       border-radius: 8px;
+      background: crimson;
       color: #fff;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s;
+      margin-top: 10px;
     }
-    .btn:hover {
-      background: #a0002e;
-    }
-
-    /* Panel */
+    button:hover { background: darkred; }
     .overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.6);
       display: none;
-      justify-content: center;
       align-items: center;
-      z-index: 100;
+      justify-content: center;
+      padding: 10px;
     }
     .panel {
       background: #222;
       padding: 20px;
       border-radius: 12px;
-      max-width: 350px;
-      width: 90%;
+      width: 100%;
+      max-width: 400px;
+      text-align: left;
       animation: slideUp 0.3s ease;
     }
     @keyframes slideUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {transform: translateY(30px); opacity:0;}
+      to {transform: translateY(0); opacity:1;}
     }
-    .panel h2 {
-      margin-top: 0;
-      font-size: 18px;
-    }
-    .panel input, .panel textarea {
+    input, textarea {
       width: 100%;
-      padding: 10px;
       margin: 8px 0;
+      padding: 10px;
       border-radius: 6px;
       border: none;
-      outline: none;
-    }
-    .panel button {
-      width: 100%;
-    }
-    .close {
-      background: #444;
-      margin-top: 8px;
+      background: #333;
+      color: #eee;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="assets/khalk.png" alt="Logo"/>
-    <h1>Khalk Store</h1>
-  </header>
 
-  <main class="container">
-    <div class="item">
-      <img src="https://via.placeholder.com/200x150" alt="Бараа 1">
-      <h3>Бараа 1</h3>
-      <p>Үнэ: 25,000₮</p>
-      <button class="btn" onclick="openOrderPanel('Бараа 1')">Захиалах</button>
-    </div>
-    <div class="item">
-      <img src="https://via.placeholder.com/200x150" alt="Бараа 2">
-      <h3>Бараа 2</h3>
-      <p>Үнэ: 45,000₮</p>
-      <button class="btn" onclick="openOrderPanel('Бараа 2')">Захиалах</button>
-    </div>
-  </main>
+<header>
+  <img src="assets/khalk.png" alt="Logo">
+  <h1>Khalk Store</h1>
+</header>
 
-  <!-- Захиалгын panel -->
-  <div class="overlay" id="orderOverlay">
-    <div class="panel">
-      <h2>Захиалга</h2>
-      <form id="orderForm">
-        <input type="text" id="customerName" placeholder="Нэр" required />
-        <input type="text" id="phone" placeholder="Утас" required />
-        <textarea id="address" placeholder="Дэлгэрэнгүй хаяг" rows="3" required></textarea>
-        <input type="hidden" id="selectedItem" />
-        <button type="submit" class="btn">Захиалах</button>
-        <button type="button" class="btn close" onclick="closeOrderPanel()">Болих</button>
-      </form>
-    </div>
+<div class="product">
+  <img src="assets/baraa1.png" alt="Hoodie + Baggy Jeans">
+  <h2>Hoodie + Baggy Jeans</h2>
+  <p>Үнэ: ₮121,000</p>
+  <button onclick="openOrder()">Захиалах</button>
+</div>
+
+<div class="overlay" id="orderOverlay">
+  <div class="panel">
+    <h3>Захиалга хийх</h3>
+    <input type="text" id="name" placeholder="Нэр">
+    <input type="text" id="phone" placeholder="Утас">
+    <textarea id="address" placeholder="Дэлгэрэнгүй хаяг"></textarea>
+    <p><b>Төлбөр хийх заавар:</b></p>
+    <p>Данс: 123456789 (ХХ Банк)</p>
+    <p>Нэр: ТаныНэр ХХК</p>
+    <p>Гүйлгээний утга: <span id="orderCode"></span></p>
+    <button onclick="submitOrder()">Захиалгаа баталгаажуулах</button>
+    <button onclick="closeOrder()">Хаах</button>
   </div>
+</div>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
-      authDomain: "khalkh-store.firebaseapp.com",
-      databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
-      projectId: "khalkh-store",
-      storageBucket: "khalkh-store.firebasestorage.app",
-      messagingSenderId: "205879441792",
-      appId: "1:205879441792:web:677a6abe7912d6436a2965",
-      measurementId: "G-6M9HZM8G9N"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+    authDomain: "khalkh-store.firebaseapp.com",
+    databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+    projectId: "khalkh-store",
+    storageBucket: "khalkh-store.appspot.com",
+    messagingSenderId: "205879441792",
+    appId: "1:205879441792:web:677a6abe7912d6436a2965",
+    measurementId: "G-6M9HZM8G9N"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-    // UI control
-    const overlay = document.getElementById("orderOverlay");
-    const selectedItemInput = document.getElementById("selectedItem");
+  function generateUniqueCode() {
+    const code = Math.floor(100000000 + Math.random()*900000000);
+    return code.toString();
+  }
 
-    function openOrderPanel(itemName) {
-      selectedItemInput.value = itemName;
-      overlay.style.display = "flex";
+  window.openOrder = function() {
+    document.getElementById("orderOverlay").style.display = "flex";
+    document.getElementById("orderCode").innerText = generateUniqueCode();
+  }
+
+  window.closeOrder = function() {
+    document.getElementById("orderOverlay").style.display = "none";
+  }
+
+  window.submitOrder = function() {
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+    const orderCode = document.getElementById("orderCode").innerText;
+
+    if(!name || !phone || !address){
+      alert("Бүх талбарыг бөглөнө үү!");
+      return;
     }
-    window.openOrderPanel = openOrderPanel;
 
-    function closeOrderPanel() {
-      overlay.style.display = "none";
-    }
-    window.closeOrderPanel = closeOrderPanel;
-
-    // Autofill localStorage
-    window.addEventListener("DOMContentLoaded", () => {
-      if (localStorage.getItem("customerName")) {
-        document.getElementById("customerName").value = localStorage.getItem("customerName");
-      }
-      if (localStorage.getItem("phone")) {
-        document.getElementById("phone").value = localStorage.getItem("phone");
-      }
-      if (localStorage.getItem("address")) {
-        document.getElementById("address").value = localStorage.getItem("address");
-      }
+    const ordersRef = ref(db, "orders");
+    const newOrderRef = push(ordersRef);
+    set(newOrderRef, {
+      code: orderCode,
+      name: name,
+      phone: phone,
+      address: address,
+      paid: false,
+      createdAt: new Date().toISOString()
     });
 
-    // Form submit
-    document.getElementById("orderForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+    alert(`Захиалга амжилттай! Гүйлгээний утганд кодыг бичээрэй: ${orderCode}`);
+    closeOrder();
+  }
+</script>
 
-      const name = document.getElementById("customerName").value;
-      const phone = document.getElementById("phone").value;
-      const address = document.getElementById("address").value;
-      const item = document.getElementById("selectedItem").value;
-
-      if (!name || !phone || !address) {
-        alert("Бүх талбарыг бөглөнө үү!");
-        return;
-      }
-
-      // Save to localStorage
-      localStorage.setItem("customerName", name);
-      localStorage.setItem("phone", phone);
-      localStorage.setItem("address", address);
-
-      // Save to Firebase
-      push(ref(db, "orders"), {
-        name: name,
-        phone: phone,
-        address: address,
-        item: item,
-        time: new Date().toISOString()
-      });
-
-      alert("Захиалга амжилттай илгээгдлээ ✅");
-      closeOrderPanel();
-    });
-  </script>
 </body>
 </html>
