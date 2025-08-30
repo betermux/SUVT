@@ -44,6 +44,12 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .product:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff0000;
   }
 
   .product img {
@@ -60,6 +66,11 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
+    transition: transform 0.2s ease;
+  }
+
+  .btn:active {
+    transform: scale(0.95);
   }
 
   @media (min-width: 600px) {
@@ -73,6 +84,27 @@
     }
   }
 
+  /* Panel style */
+  #panel {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #ff0000;
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    z-index: 1000;
+  }
+
+  #panel.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
 </style>
 </head>
 <body>
@@ -83,6 +115,8 @@
 </header>
 
 <div class="products" id="products"></div>
+
+<div id="panel"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
@@ -109,6 +143,7 @@ const productsData = [
 ];
 
 const productsDiv = document.getElementById('products');
+const panel = document.getElementById('panel');
 
 function renderProducts() {
   productsDiv.innerHTML = '';
@@ -130,7 +165,10 @@ window.orderProduct = function(id) {
   const name = prompt("Таны нэр:");
   const phone = prompt("Утасны дугаар:");
 
-  if(!name || !phone) return alert("Мэдээллийг бүрэн оруулна уу!");
+  if(!name || !phone) {
+    showPanel("Мэдээллийг бүрэн оруулна уу!", false);
+    return;
+  }
 
   const orderRef = ref(db, 'orders');
   push(orderRef, {
@@ -139,11 +177,20 @@ window.orderProduct = function(id) {
     item: product,
     timestamp: Date.now()
   }).then(() => {
-    alert(`${product.name} захиалга амжилттай хадгалагдлаа!`);
+    showPanel(`${product.name} захиалга амжилттай хадгалагдлаа!`, true);
   }).catch(err => {
     console.error(err);
-    alert("Алдаа гарлаа, дахин оролдоно уу.");
+    showPanel("Алдаа гарлаа, дахин оролдоно уу.", false);
   });
+}
+
+function showPanel(message, success) {
+  panel.textContent = message;
+  panel.style.backgroundColor = success ? "#00a600" : "#aa0000";
+  panel.classList.add("show");
+  setTimeout(() => {
+    panel.classList.remove("show");
+  }, 3000);
 }
 
 renderProducts();
