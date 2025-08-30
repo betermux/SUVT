@@ -9,7 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
 body{background:#121212;color:#fff;overflow-x:hidden;position:relative;}
 header{padding:30px 20px;text-align:center;position:relative;height:100px;}
-#logo{width:120px;transition: all 0.8s ease;}
+#logo{width:120px;transition: all 0.8s ease;cursor:pointer;}
 #user-phone{
     position:absolute;
     top:20px;
@@ -21,6 +21,7 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
     color:#fff;
 }
 
+/* Auth */
 .container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
 .card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 25px rgba(0,0,0,0.5);transform: translateY(-50px);opacity:0;animation: slideDown 0.8s forwards;}
 @keyframes slideDown{to{transform: translateY(0);opacity:1;}}
@@ -32,6 +33,7 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
 .switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
 .switch:hover{text-decoration:underline;}
 
+/* Shop */
 .shop-container{padding:40px;color:#fff;display:none;}
 .shop-title{text-align:center;font-size:2em;margin-bottom:30px;}
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
@@ -42,6 +44,22 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
 .product-card p{margin-bottom:15px;}
 .product-card button{padding:10px 15px;border:none;border-radius:8px;background:#ff5252;color:#fff;font-weight:bold;cursor:pointer;transition:.3s;}
 .product-card button:hover{background:#ff1744;}
+
+/* Cart popup */
+#cart-popup{
+    display:none;
+    position:absolute;
+    top:70px;
+    left:20px;
+    width:300px;
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.5);
+    color:#fff;
+    z-index:100;
+}
+#cart-items div{margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -80,6 +98,12 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
 </div>
 </div>
 
+<!-- Cart Popup -->
+<div id="cart-popup">
+  <h3>Сагс</h3>
+  <div id="cart-items"></div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
@@ -107,6 +131,8 @@ const authButton = document.getElementById('auth-button');
 const switchAuth = document.getElementById('switch-auth');
 const userPhoneDiv = document.getElementById('user-phone');
 const logo = document.getElementById('logo');
+const cartPopup = document.getElementById('cart-popup');
+const cartItemsDiv = document.getElementById('cart-items');
 let isLogin = true;
 
 // Switch login/register
@@ -130,14 +156,14 @@ authButton.addEventListener('click', () => {
       if(snapshot.exists() && snapshot.val().password === password){
         currentUserPhone = phone;
 
-        // Animation: логог жижигрүүлэх, зүүн дээд буланд шилжүүлэх
+        // Лого жижигрүүлэх
         logo.style.width = '50px';
         logo.style.position = 'absolute';
         logo.style.top = '20px';
         logo.style.left = '20px';
         logo.style.transition = 'all 0.8s ease';
 
-        // Нэвтэрсэн дугаарыг харуулах, логогоос 2px зайтай
+        // Дугаар харуулах
         userPhoneDiv.textContent = phone;
         userPhoneDiv.style.opacity = '1';
         userPhoneDiv.style.left = '72px'; // 20px + 50px + 2px
@@ -173,6 +199,26 @@ document.querySelectorAll('.product-card button').forEach((btn)=>{
       cart.push({ name: productName, price: productPrice });
       set(cartRef, cart).then(()=> alert(`${productName} сагсанд нэмэгдлээ!`));
     });
+  });
+});
+
+// Logo click → cart popup
+logo.addEventListener('click', ()=>{
+  if(!currentUserPhone) return;
+  cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
+
+  const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
+  get(cartRef).then(snapshot => {
+    cartItemsDiv.innerHTML = '';
+    if(snapshot.exists()){
+      snapshot.val().forEach(item=>{
+        const div = document.createElement('div');
+        div.textContent = `${item.name} - ${item.price}`;
+        cartItemsDiv.appendChild(div);
+      });
+    } else {
+      cartItemsDiv.textContent = 'Сагс хоосон байна';
+    }
   });
 });
 </script>
