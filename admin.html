@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+</head>
+<body>
+<h2>Admin Login</h2>
+<input type="text" id="phone" placeholder="Утасны дугаар"><br><br>
+<input type="password" id="password" placeholder="Нууц үг"><br><br>
+<button onclick="login()">Нэвтрэх</button>
+
+<div id="adminSection" style="display:none;">
+  <h2>Бараа нэмэх</h2>
+  <input type="file" id="productImage"><br><br>
+  <input type="text" id="productName" placeholder="Барааны нэр"><br><br>
+  <input type="text" id="productDesc" placeholder="Тайлбар"><br><br>
+  <input type="number" id="productPrice" placeholder="Үнэ"><br><br>
+  <button onclick="uploadProduct()">Бараа нэмэх</button>
+  <h2>Нэмсэн бараанууд</h2>
+  <ul id="productList"></ul>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getDatabase, ref as dbRef, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+  authDomain: "khalkh-store.firebaseapp.com",
+  databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+  projectId: "khalkh-store",
+  storageBucket: "khalkh-store.appspot.com",
+  messagingSenderId: "205879441792",
+  appId: "1:205879441792:web:fb71f2c84f8c16b36a2965",
+  measurementId: "G-DHB8PQZ514"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const storage = getStorage(app);
+const database = getDatabase(app);
+
+// Админ утасны жагсаалт
+const adminPhones = ["88580646", "80866494", "99566201"];
+
+function formatPhone(phone) {
+  return phone + "@phone.khalkh.mn";
+}
+
+// Login
+window.login = function() {
+  const phone = document.getElementById("phone").value;
+  const password = document.getElementById("password").value;
+
+  if(!adminPhones.includes(phone)){
+    alert("Та админ биш байна!");
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, formatPhone(phone), password)
+    .then(user => {
+      alert("Амжилттай нэвтэрлээ");
+      document.getElementById("adminSection").style.display = "block";
+    })
+    .catch(error => alert(error.message));
+}
+
+// Бараа нэмэх
+window.uploadProduct = async function() {
+  const file = document.getElementById("productImage").files[0];
+  const name = document.getElementById("productName").value;
+  const desc = document.getElementById("productDesc").value;
+  const price = document.getElementById("productPrice").value;
+
+  if(!file || !name || !price){ alert("Бүх мэдээллээ оруулна уу"); return; }
+
+  const storageRef = sRef(storage, "products/"+file.name);
+  await uploadBytes(storageRef, file);
+  const imageUrl = await getDownloadURL(storageRef);
+
+  await push(dbRef(database, "products"), { name, desc, price, image: imageUrl });
+  alert("Бараа амжилттай нэмэгдлээ");
+}
+
+// Барааны жагсаалт
+const productListRef = dbRef(database, "products");
+onValue(productListRef, snapshot=>{
+  const list = document.getElementById("productList");
+  list.innerHTML = "";
+  snapshot.forEach(child=>{
+    const data = child.val();
+    const li = document.createElement("li");
+    li.innerHTML = `<img src="${data.image}" width="50"> ${data.name} - ${data.price}₮ <br> ${data.desc}`;
+    list.appendChild(li);
+  });
+});
+</script>
+</body>
+</html>
