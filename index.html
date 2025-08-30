@@ -29,6 +29,7 @@ button { background:#d32f2f; color:#fff; font-weight:bold; cursor:pointer; }
   <h3 id="formTitle">Нэвтрэх</h3>
   <input type="text" id="phone" placeholder="Утасны дугаар">
   <input type="password" id="password" placeholder="Нууц үг">
+  <input type="password" id="confirmPassword" placeholder="Нууц үг давтах" style="display:none;">
   <button id="actionBtn" onclick="login()">Нэвтрэх</button>
   <div class="toggle" onclick="toggleForm()">Шинэ хэрэглэгч үү? Бүртгүүлэх</div>
 </div>
@@ -62,16 +63,21 @@ function toggleForm(){
   isRegister = !isRegister;
   document.getElementById("formTitle").innerText = isRegister ? "Хэрэглэгч бүртгүүлэх" : "Нэвтрэх";
   document.getElementById("actionBtn").innerText = isRegister ? "Бүртгүүлэх" : "Нэвтрэх";
+  document.getElementById("confirmPassword").style.display = isRegister ? "block" : "none";
 }
 
 function login(){
   const phone = document.getElementById("phone").value.trim();
   const password = document.getElementById("password").value.trim();
+  const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
   if(!phone || !password){ alert("Бүх талбарыг бөглөнө үү"); return; }
 
   const userRef = dbRef(database, 'users/' + phone);
+
   get(userRef).then(snapshot=>{
     if(isRegister){
+      if(password !== confirmPassword){ alert("Нууц үг хоорондоо таарахгүй байна"); return; }
       if(snapshot.exists()){
         alert("Энэ утасны дугаар аль хэдийн бүртгэлтэй");
       } else {
