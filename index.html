@@ -6,91 +6,101 @@
 <title>Khalk Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #121212;
-    color: #fff;
-  }
+body {
+  margin:0;
+  font-family:'Roboto',sans-serif;
+  background:#121212;
+  color:#fff;
+}
 
-  header {
-    background: #d32f2f;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  header img { height: 40px; }
-  header h1 { font-size: 1.3rem; margin: 0; }
+header {
+  background:#d32f2f;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:2px solid #aa0000;
+}
+header img { height:40px; }
+header h1 { font-size:1.4rem; margin:0; font-weight:700; }
 
-  .products {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 15px;
-  }
+.products {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:15px;
+}
+.product {
+  background:#1e1e1e;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  transition:transform 0.2s ease;
+}
+.product:hover{ transform:scale(1.02); }
+.product img{ width:100%; max-width:200px; border-radius:10px; }
+.btn{
+  background:#d32f2f; color:#fff;
+  padding:8px 16px; border:none; border-radius:6px;
+  cursor:pointer; font-size:0.9rem; transition:background 0.2s;
+}
+.btn:hover{ background:#b71c1c; }
 
-  .product {
-    background-color: #1e1e1e;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-  }
+@media(min-width:600px){
+  .products{ flex-direction:row; flex-wrap:wrap; justify-content:center; }
+  .product{ width:180px; }
+}
 
-  .product img { width: 100%; max-width: 200px; border-radius: 8px; }
-  .btn {
-    background-color: #d32f2f;
-    color: #fff;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
+/* Overlay & Panel */
+#overlay{
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.5); opacity:0; pointer-events:none;
+  transition:opacity 0.3s ease; z-index:999;
+}
+#overlay.show{ opacity:1; pointer-events:all; }
 
-  @media (min-width: 600px) {
-    .products { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-    .product { width: 180px; }
-  }
+#order-panel{
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+  padding:25px 30px;
+  border-radius:14px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.7);
+  z-index:1000;
+  transition:transform 0.3s ease, opacity 0.3s;
+  width:90%; max-width:320px;
+}
+#order-panel.show{ transform:translate(-50%,-50%) scale(1); }
 
-  /* Overlay & Panel */
-  #overlay {
-    position: fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.5); opacity:0; pointer-events:none;
-    transition: opacity 0.3s ease; z-index:999;
-  }
-  #overlay.show { opacity:1; pointer-events:all; }
+#order-panel h3{
+  margin-top:0; margin-bottom:15px;
+  text-align:center; font-size:1.2rem; font-weight:700;
+  color:#fff;
+}
 
-  #order-panel {
-    position: fixed; top:50%; left:50%;
-    transform: translate(-50%, -50%) scale(0);
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 8px;
-    z-index:1000;
-    transition: transform 0.3s ease;
-    width: 85%; max-width: 300px;
-  }
-  #order-panel.show { transform: translate(-50%, -50%) scale(1); }
+#order-panel input{
+  width:100%; padding:10px 12px; margin-bottom:12px;
+  border-radius:8px; border:1px solid #333;
+  background:#2a2a2a; color:#fff; font-size:0.95rem;
+}
 
-  #order-panel h3 { margin-top:0; margin-bottom:10px; text-align:center; font-size:1rem; }
-  #order-panel input {
-    width:100%; padding:8px; margin-bottom:8px;
-    border-radius:4px; border:none; font-size:0.9rem;
-  }
-  #order-panel .submit-btn {
-    background-color:#00a600; color:#fff; width:100%;
-    padding:10px; border:none; border-radius:4px; font-size:0.9rem;
-  }
+#order-panel .submit-btn{
+  width:100%; padding:12px; border:none; border-radius:8px;
+  background:#00a600; color:#fff; font-size:1rem; cursor:pointer;
+  transition:background 0.2s;
+}
+#order-panel .submit-btn:hover{ background:#009500; }
 
-  #panel-message {
-    position: fixed; top:15px; left:50%;
-    transform: translateX(-50%) translateY(-100%);
-    background-color: #00a600; color:#fff;
-    padding:10px 20px; border-radius:6px;
-    opacity:0; transition: transform 0.3s ease, opacity 0.3s ease; z-index:1001;
-  }
-  #panel-message.show { transform: translateX(-50%) translateY(0); opacity:1; }
+#panel-message{
+  position:fixed; top:15px; left:50%;
+  transform:translateX(-50%) translateY(-120%);
+  background-color:#00a600; color:#fff;
+  padding:12px 20px; border-radius:8px;
+  opacity:0; transition: transform 0.3s, opacity 0.3s;
+  z-index:1001;
+  font-weight:500;
+}
+#panel-message.show{ transform:translateX(-50%) translateY(0); opacity:1; }
 
 </style>
 </head>
@@ -119,33 +129,33 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/fireba
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
-  authDomain: "khalkh-store.firebaseapp.com",
-  databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
-  projectId: "khalkh-store",
-  storageBucket: "khalkh-store.appspot.com",
-  messagingSenderId: "205879441792",
-  appId: "1:205879441792:web:677a6abe7912d6436a2965"
+  apiKey:"AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+  authDomain:"khalkh-store.firebaseapp.com",
+  databaseURL:"https://khalkh-store-default-rtdb.firebaseio.com",
+  projectId:"khalkh-store",
+  storageBucket:"khalkh-store.appspot.com",
+  messagingSenderId:"205879441792",
+  appId:"1:205879441792:web:677a6abe7912d6436a2965"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const productsData = [
+const productsData=[
   {id:1,name:"Бараа 1",price:10000,img:"https://via.placeholder.com/200x200?text=Product+1"},
   {id:2,name:"Бараа 2",price:15000,img:"https://via.placeholder.com/200x200?text=Product+2"},
   {id:3,name:"Бараа 3",price:20000,img:"https://via.placeholder.com/200x200?text=Product+3"}
 ];
 
-const productsDiv = document.getElementById('products');
-const orderPanel = document.getElementById('order-panel');
-const overlay = document.getElementById('overlay');
-const panelMessage = document.getElementById('panel-message');
+const productsDiv=document.getElementById('products');
+const orderPanel=document.getElementById('order-panel');
+const overlay=document.getElementById('overlay');
+const panelMessage=document.getElementById('panel-message');
 
-let selectedProduct = null;
+let selectedProduct=null;
 
-function renderProducts() {
-  productsDiv.innerHTML = '';
+function renderProducts(){
+  productsDiv.innerHTML='';
   productsData.forEach(p=>{
     const div=document.createElement('div');
     div.className='product';
@@ -165,35 +175,20 @@ window.openOrderPanel=function(id){
   orderPanel.classList.add('show');
 }
 
-overlay.addEventListener('click',closeOrderPanel);
-function closeOrderPanel(){
-  overlay.classList.remove('show');
-  orderPanel.classList.remove('show');
-  document.getElementById('customer-name').value='';
-  document.getElementById('customer-phone').value='';
-}
+overlay.addEventListener('click',()=>{overlay.classList.remove('show');orderPanel.classList.remove('show');});
 
 document.getElementById('submit-order').addEventListener('click',()=>{
   const name=document.getElementById('customer-name').value.trim();
   const phone=document.getElementById('customer-phone').value.trim();
-
-  if(!name||!phone){
-    showPanel("Мэдээлэл дутуу байна",false);
-    return;
-  }
+  if(!name||!phone){ showPanel("Мэдээлэл дутуу байна",false); return; }
 
   push(ref(db,'orders'),{
-    customerName:name,
-    phone:phone,
-    item:selectedProduct,
-    timestamp:Date.now()
+    customerName:name, phone:phone,
+    item:selectedProduct, timestamp:Date.now()
   }).then(()=>{
     showPanel(`${selectedProduct.name} захиалга амжилттай!`,true);
-    closeOrderPanel();
-  }).catch(err=>{
-    console.error("Firebase алдаа:",err);
-    showPanel("Алдаа гарлаа",false);
-  });
+    overlay.classList.remove('show'); orderPanel.classList.remove('show');
+  }).catch(err=>{ console.error("Firebase алдаа:",err); showPanel("Алдаа гарлаа",false); });
 });
 
 function showPanel(message,success){
