@@ -1,13 +1,13 @@
 <!doctype html>
+
 <html lang="mn">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Онлайн дэлгүүр - Улаан/Хар сэдэв</title>
   <meta name="description" content="Хялбар, хурдан онлайн дэлгүүр — улаан-хар өнгөтэй загвар" />
   <link rel="icon" href="./assets/khalk.png" />
   <style>
-    /* --- Base --- */
     :root{
       --red:#d32f2f;
       --dark:#0b0b0b;
@@ -15,56 +15,52 @@
       --glass: rgba(255,255,255,0.04);
       --card-shadow: 0 6px 18px rgba(11,11,11,0.45);
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg, #0b0b0b 0%, #111 100%); color: #fff;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#0b0b0b; color:#fff; line-height:1.5;}
     a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
+    img{max-width:100%;display:block}.container{max-width:1200px;margin:0 auto;padding:16px}
 
-    /* --- Container --- */
-    .container{max-width:1200px;margin:0 auto;padding:24px}
+header{background:#111;position:sticky;top:0;z-index:1000}
+.nav{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:8px 0}
+.brand{display:flex;gap:8px;align-items:center}
+.brand img{width:40px;height:40px;border-radius:8px;object-fit:cover}
+.brand h1{font-size:18px;margin:0;color:var(--red)}
 
-    /* --- Header / Nav --- */
-    header{background:linear-gradient(90deg, rgba(211,47,47,0.06), rgba(0,0,0,0.0));backdrop-filter: blur(4px);border-bottom:1px solid rgba(255,255,255,0.03)}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
-    .brand{display:flex;gap:12px;align-items:center}
-    .brand img{width:48px;height:48px;border-radius:8px;object-fit:cover}
-    .brand h1{font-size:18px;margin:0;color:var(--red)}
-    .search{flex:1;margin:0 18px}
-    .search input{width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
-    .nav-actions{display:flex;gap:10px;align-items:center}
-    .btn{background:var(--red);color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;border:none;font-weight:600}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+.search{flex:1;min-width:180px}
+.search input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#0b0b0b;color:#fff;font-size:14px}
 
-    /* --- Hero --- */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;padding:36px 0}
-    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:16px;box-shadow:var(--card-shadow)}
-    .hero h2{font-size:34px;margin:0 0 12px;color:var(--red)}
-    .hero p{margin:0 0 18px;color:#ddd}
+.nav-actions{display:flex;gap:6px;align-items:center}
+.btn{background:var(--red);color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;border:none;font-weight:600;font-size:14px}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.15)}
 
-    /* --- Product grid --- */
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:18px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)}
-    .card .thumb{height:160px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.2))}
-    .card h3{margin:10px 0 6px;font-size:16px}
-    .price{font-weight:700;color:var(--red)}
-    .card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.hero{display:flex;flex-direction:column;gap:18px;padding:20px 0}
+.hero-card{background:#111;padding:18px;border-radius:12px;box-shadow:var(--card-shadow)}
+.hero h2{font-size:24px;margin-bottom:8px;color:var(--red)}
+.hero p{margin-bottom:12px;color:#ccc;font-size:14px}
 
-    /* --- Simple cart modal --- */
-    .cart-btn{position:relative}
-    .cart-count{position:absolute;right:-8px;top:-8px;background:var(--red);width:20px;height:20px;border-radius:99px;font-size:12px;display:flex;align-items:center;justify-content:center}
-    .modal{position:fixed;right:20px;bottom:20px;width:360px;background:#070707;border-radius:12px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,0.8);display:none}
-    .modal.open{display:block}
-    .modal h4{margin:0 0 10px}
-    .modal .line{height:1px;background:rgba(255,255,255,0.04);margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.card{background:#111;padding:10px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.6)}
+.card .thumb{height:120px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000}
+.card h3{margin:8px 0 4px;font-size:14px}
+.price{font-weight:700;color:var(--red);font-size:14px}
+.card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px}
 
-    /* --- Footer --- */
-    footer{padding:26px 0;color:#bbb;text-align:center;border-top:1px solid rgba(255,255,255,0.03);margin-top:36px}
+.cart-btn{position:relative}
+.cart-count{position:absolute;right:-6px;top:-6px;background:var(--red);width:18px;height:18px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}
 
-    /* --- Responsive --- */
-    @media (max-width:900px){
-      .hero{grid-template-columns:1fr;}
-      .search{order:3;margin:12px 0}
-    }
+.modal{position:fixed;right:10px;bottom:10px;left:10px;max-width:360px;margin:auto;background:#111;border-radius:12px;padding:12px;box-shadow:0 16px 40px rgba(0,0,0,0.8);display:none;z-index:2000}
+.modal.open{display:block}
+.modal h4{margin:0 0 8px;font-size:16px}
+.modal .line{height:1px;background:rgba(255,255,255,0.1);margin:8px 0}
+
+footer{padding:18px 0;color:#bbb;text-align:center;border-top:1px solid rgba(255,255,255,0.1);margin-top:24px;font-size:12px}
+
+@media (min-width:768px){
+  .hero{flex-direction:row}
+  .hero-card{flex:1}
+  .hero aside{flex:1}
+}
+
   </style>
 </head>
 <body>
@@ -72,62 +68,33 @@
     <div class="container nav">
       <div class="brand">
         <img src="./assets/khalk.png" alt="Лого">
-        <div>
-          <h1>Khalk Shop</h1>
-          <div style="font-size:12px;color:#bbb">Улаан • Хар стиль</div>
-        </div>
-      </div>
+        <h1>Khalk Shop</h1>
+      </div><div class="search">
+    <input id="searchInput" placeholder="Бараа хайх..." />
+  </div>
 
-      <div class="search">
-        <input id="searchInput" placeholder="Бараа хайх... (ж. : утас, цамц, плед)" />
-      </div>
+  <div class="nav-actions">
+    <button class="btn ghost" onclick="filterCategory('all')">Бүгд</button>
+    <button class="btn" onclick="openCart()">Сагс <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</div>
 
-      <div class="nav-actions">
-        <button class="btn ghost" onclick="filterCategory('all')">Бүгд</button>
-        <button class="btn" onclick="openCart()">Сагс <span class="cart-count" id="cartCount">0</span></button>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
+  </header>  <main class="container">
     <section class="hero">
       <div class="hero-card">
-        <h2>Онлайн дэлгүүр — Шууд захиалга</h2>
-        <p>Бүх бараа бэлэн. Түргэн хүргэлт. Улаан-Хар сэдэвтэй цэвэр, хурдан, мобайл-д ээлтэй дэлгүүр.</p>
-        <div style="display:flex;gap:10px">
-          <button class="btn" onclick="scrollToProducts()">Барааг үзэх</button>
-          <button class="btn ghost" onclick="filterCategory('hot')">Халуун</button>
-        </div>
+        <h2>Онлайн дэлгүүр</h2>
+        <p>Мобайлд бүрэн тохирсон улаан-Хар загвар.</p>
+        <button class="btn" onclick="scrollToProducts()">Барааг үзэх</button>
       </div>
-
-      <aside style="display:flex;flex-direction:column;gap:12px">
-        <div class="hero-card">
-          <h4 style="margin:0 0 6px">Хурдан лавлах</h4>
-          <p style="margin:0 0 8px;color:#ccc;font-size:14px">Хэрвээ танд тодорхой бараа хэрэгтэй бол хайлт дээр нэрийг оруулна уу.</p>
-          <ul style="margin:0;padding-left:18px;color:#ddd">
-            <li>Төлбөр: Бэлэн/Дамжуулалт</li>
-            <li>Хүргэлт: Улсын хэмжээнд</li>
-            <li>Баталгаа: 7 хоногийн буцаалт</li>
-          </ul>
-        </div>
-
-        <div class="hero-card" style="text-align:center">
-          <img src="./assets/khalk.png" alt="Лого" style="width:100px;margin:0 auto 10px;filter:grayscale(0.1);opacity:0.95" />
-          <div style="font-size:14px;color:#ccc">Дэлгүүрийн тусгай санал - 10% хөнгөлөлт шинэ хэрэглэгчдэд</div>
-        </div>
+      <aside class="hero-card">
+        <p style="font-size:13px;color:#ccc">Тусгай санал: шинэ хэрэглэгчдэд 10% хөнгөлөлт</p>
       </aside>
-    </section>
+    </section><section id="products">
+  <h3 style="margin:8px 0;color:#fff;font-size:18px">Бараа</h3>
+  <div class="grid" id="productGrid"></div>
+</section>
 
-    <section id="products">
-      <h3 style="margin:6px 0 8px;color:#fff">Бараа</h3>
-      <div class="grid" id="productGrid">
-        <!-- Example product cards injected by JS -->
-      </div>
-    </section>
-
-  </main>
-
-  <div class="modal" id="cartModal">
+  </main>  <div class="modal" id="cartModal">
     <h4>Таны сагс</h4>
     <div id="cartItems"></div>
     <div class="line"></div>
@@ -135,50 +102,34 @@
       <div style="font-weight:700">Нийт: <span id="cartTotal">₮0</span></div>
       <button class="btn" onclick="checkout()">Төлбөр</button>
     </div>
-  </div>
-
-  <footer>
-    <div class="container">
-      © "Khalk Shop" — Бүх эрх хуулиар хамгаалагдсан. Хаяг: Улаанбаатар
-    </div>
-  </footer>
-
-  <script>
-    // --- Sample data ---
+  </div>  <footer>
+    <div class="container">© Khalk Shop — Бүх эрх хуулиар хамгаалагдсан</div>
+  </footer>  <script>
     const products = [
-      {id:1,name:'Утас - Model A',price:259000, img:'./assets/product1.jpg',avail:true,tag:'hot'},
-      {id:2,name:'Цамц - Хар',price:45000, img:'./assets/product2.jpg',avail:true,tag:'clothing'},
-      {id:3,name:'Плед - Улаан',price:32000, img:'./assets/product3.jpg',avail:true,tag:'home'},
-      {id:4,name:'Чихэвч',price:12000, img:'./assets/product4.jpg',avail:true,tag:'electronics'},
-      {id:5,name:'Зуны малгай',price:15000, img:'./assets/product5.jpg',avail:true,tag:'accessory'},
-      {id:6,name:'USB кабель',price:4500, img:'./assets/product6.jpg',avail:true,tag:'electronics'}
+      {id:1,name:'Утас - Model A',price:259000, img:'./assets/product1.jpg',tag:'hot'},
+      {id:2,name:'Цамц - Хар',price:45000, img:'./assets/product2.jpg',tag:'clothing'},
+      {id:3,name:'Плед - Улаан',price:32000, img:'./assets/product3.jpg',tag:'home'},
+      {id:4,name:'Чихэвч',price:12000, img:'./assets/product4.jpg',tag:'electronics'}
     ];
-
-    // --- Cart ---
     let cart = {};
+
     function renderProducts(list){
       const grid = document.getElementById('productGrid');
       grid.innerHTML='';
       list.forEach(p=>{
         const card = document.createElement('div'); card.className='card';
         card.innerHTML = `
-          <div class="thumb"><img src="${p.img}" alt="${p.name}" style="max-height:140px;object-fit:contain" /></div>
+          <div class="thumb"><img src="${p.img}" alt="${p.name}" /></div>
           <h3>${p.name}</h3>
-          <div style="color:#bbb;font-size:13px">${p.tag}</div>
           <div class="meta">
             <div class="price">₮${p.price.toLocaleString()}</div>
-            <div>
-              <button class="btn ghost" onclick="addToCart(${p.id})">+ Сагс</button>
-            </div>
-          </div>
-        `;
+            <button class="btn ghost" style="padding:4px 8px;font-size:12px" onclick="addToCart(${p.id})">+ Сагс</button>
+          </div>`;
         grid.appendChild(card);
       })
     }
 
     function addToCart(id){
-      const p = products.find(x=>x.id===id);
-      if(!p) return;
       cart[id] = cart[id] ? cart[id]+1 : 1;
       updateCartUI();
       openCart();
@@ -187,17 +138,16 @@
     function updateCartUI(){
       const count = Object.values(cart).reduce((s,n)=>s+n,0);
       document.getElementById('cartCount').textContent = count;
-
       const itemsDiv = document.getElementById('cartItems');
-      itemsDiv.innerHTML = '';
+      itemsDiv.innerHTML='';
       let total = 0;
       for(const id in cart){
         const prod = products.find(p=>p.id==id);
         const qty = cart[id];
         total += prod.price * qty;
         const row = document.createElement('div');
-        row.style.display='flex';row.style.justifyContent='space-between';row.style.marginBottom='8px';
-        row.innerHTML = `<div>${prod.name} x ${qty}</div><div>₮${(prod.price*qty).toLocaleString()}</div>`;
+        row.style.display='flex';row.style.justifyContent='space-between';row.style.marginBottom='6px';
+        row.innerHTML = `<div style="font-size:13px">${prod.name} x ${qty}</div><div>₮${(prod.price*qty).toLocaleString()}</div>`;
         itemsDiv.appendChild(row);
       }
       document.getElementById('cartTotal').textContent = '₮'+total.toLocaleString();
@@ -209,8 +159,7 @@
 
     function checkout(){
       if(Object.keys(cart).length===0){alert('Сагс хоосон байна');return}
-      alert('Төлбөрийн хэсэг рүү шилжиж байна (жишээ): Нийт: ' + document.getElementById('cartTotal').textContent);
-      // Here you would integrate payment or redirect to checkout page.
+      alert('Төлбөр хийх жишээ: '+document.getElementById('cartTotal').textContent);
     }
 
     function filterCategory(tag){
@@ -222,16 +171,13 @@
       document.getElementById('products').scrollIntoView({behavior:'smooth'});
     }
 
-    // Search
     document.getElementById('searchInput').addEventListener('input', (e)=>{
-      const q = e.target.value.toLowerCase().trim();
+      const q = e.target.value.toLowerCase();
       if(!q) renderProducts(products);
-      else renderProducts(products.filter(p=>p.name.toLowerCase().includes(q) || p.tag.toLowerCase().includes(q)));
+      else renderProducts(products.filter(p=>p.name.toLowerCase().includes(q)||p.tag.toLowerCase().includes(q)));
     });
 
-    // Initial render
     renderProducts(products);
     updateCartUI();
-  </script>
-</body>
+  </script></body>
 </html>
