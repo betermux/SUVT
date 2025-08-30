@@ -84,7 +84,25 @@
     }
   }
 
-  /* Panel (popup) style */
+  /* Overlay & Panel */
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+  }
+
+  #overlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
   #order-panel {
     position: fixed;
     top: 50%;
@@ -137,24 +155,6 @@
     transform: scale(0.95);
   }
 
-  #overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 999;
-  }
-
-  #overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
-
   #panel-message {
     position: fixed;
     top: 20px;
@@ -174,7 +174,6 @@
     transform: translateX(-50%) translateY(0);
     opacity: 1;
   }
-
 </style>
 </head>
 <body>
@@ -200,6 +199,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
@@ -213,6 +213,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const db = getDatabase(app);
 
 const productsData = [
