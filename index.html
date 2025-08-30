@@ -14,7 +14,7 @@
   }
 
   header {
-    background: linear-gradient(to right, #ff0000, #000000);
+    background: linear-gradient(to right, #d32f2f, #121212);
     padding: 15px 20px;
     display: flex;
     align-items: center;
@@ -36,7 +36,7 @@
   }
 
   .product {
-    background-color: #1a1a1a;
+    background-color: #1e1e1e;
     padding: 15px;
     border-radius: 10px;
     text-align: center;
@@ -48,8 +48,8 @@
   }
 
   .product:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #ff0000;
+    transform: scale(1.03);
+    box-shadow: 0 0 10px #d32f2f;
   }
 
   .product img {
@@ -59,7 +59,7 @@
   }
 
   .btn {
-    background-color: #ff0000;
+    background-color: #d32f2f;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -84,23 +84,93 @@
     }
   }
 
-  /* Panel style */
-  #panel {
+  /* Panel (popup) style */
+  #order-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: #1e1e1e;
+    padding: 25px 35px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #d32f2f;
+    z-index: 1000;
+    transition: transform 0.4s ease;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  #order-panel.show {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  #order-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #fff;
+  }
+
+  #order-panel input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+  }
+
+  #order-panel .submit-btn {
+    background-color: #00a600;
+    color: #fff;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+  }
+
+  #order-panel .submit-btn:active {
+    transform: scale(0.95);
+  }
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+  }
+
+  #overlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #panel-message {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100%);
-    background-color: #1a1a1a;
+    background-color: #00a600;
     color: #fff;
     padding: 15px 25px;
     border-radius: 10px;
-    box-shadow: 0 0 15px #ff0000;
+    box-shadow: 0 0 15px #00a600;
     opacity: 0;
     transition: transform 0.5s ease, opacity 0.5s ease;
-    z-index: 1000;
+    z-index: 1001;
   }
 
-  #panel.show {
+  #panel-message.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
   }
@@ -116,7 +186,16 @@
 
 <div class="products" id="products"></div>
 
-<div id="panel"></div>
+<div id="overlay"></div>
+
+<div id="order-panel">
+  <h3>Захиалга хийх</h3>
+  <input type="text" id="customer-name" placeholder="Таны нэр">
+  <input type="text" id="customer-phone" placeholder="Утасны дугаар">
+  <button class="submit-btn" id="submit-order">Захиалах</button>
+</div>
+
+<div id="panel-message"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
@@ -143,7 +222,11 @@ const productsData = [
 ];
 
 const productsDiv = document.getElementById('products');
-const panel = document.getElementById('panel');
+const orderPanel = document.getElementById('order-panel');
+const overlay = document.getElementById('overlay');
+const panelMessage = document.getElementById('panel-message');
+
+let selectedProduct = null;
 
 function renderProducts() {
   productsDiv.innerHTML = '';
@@ -154,16 +237,30 @@ function renderProducts() {
       <img src="${p.img}" alt="${p.name}">
       <h4>${p.name}</h4>
       <p>${p.price}₮</p>
-      <button class="btn" onclick="orderProduct(${p.id})">Захиалах</button>
+      <button class="btn" onclick="openOrderPanel(${p.id})">Захиалах</button>
     `;
     productsDiv.appendChild(div);
   });
 }
 
-window.orderProduct = function(id) {
-  const product = productsData.find(p => p.id === id);
-  const name = prompt("Таны нэр:");
-  const phone = prompt("Утасны дугаар:");
+window.openOrderPanel = function(id) {
+  selectedProduct = productsData.find(p => p.id === id);
+  overlay.classList.add('show');
+  orderPanel.classList.add('show');
+}
+
+overlay.addEventListener('click', closeOrderPanel);
+
+function closeOrderPanel() {
+  overlay.classList.remove('show');
+  orderPanel.classList.remove('show');
+  document.getElementById('customer-name').value = '';
+  document.getElementById('customer-phone').value = '';
+}
+
+document.getElementById('submit-order').addEventListener('click', () => {
+  const name = document.getElementById('customer-name').value.trim();
+  const phone = document.getElementById('customer-phone').value.trim();
 
   if(!name || !phone) {
     showPanel("Мэдээллийг бүрэн оруулна уу!", false);
@@ -174,22 +271,23 @@ window.orderProduct = function(id) {
   push(orderRef, {
     customerName: name,
     phone: phone,
-    item: product,
+    item: selectedProduct,
     timestamp: Date.now()
   }).then(() => {
-    showPanel(`${product.name} захиалга амжилттай хадгалагдлаа!`, true);
+    showPanel(`${selectedProduct.name} захиалга амжилттай хадгалагдлаа!`, true);
+    closeOrderPanel();
   }).catch(err => {
     console.error(err);
     showPanel("Алдаа гарлаа, дахин оролдоно уу.", false);
   });
-}
+});
 
 function showPanel(message, success) {
-  panel.textContent = message;
-  panel.style.backgroundColor = success ? "#00a600" : "#aa0000";
-  panel.classList.add("show");
+  panelMessage.textContent = message;
+  panelMessage.style.backgroundColor = success ? "#00a600" : "#aa0000";
+  panelMessage.classList.add("show");
   setTimeout(() => {
-    panel.classList.remove("show");
+    panelMessage.classList.remove("show");
   }, 3000);
 }
 
