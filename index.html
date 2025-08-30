@@ -1,162 +1,64 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Online Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Үндсэн стиль */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        body {
-            background: #fff0f0;
-            color: #fff;
-        }
-
-        header {
-            background: linear-gradient(90deg, #e53935, #b71c1c);
-            padding: 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 2em;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-        }
-
-        .card {
-            background: #b71c1c;
-            padding: 40px;
-            border-radius: 15px;
-            width: 350px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        .card h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .card input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: none;
-        }
-
-        .card button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 8px;
-            background: #ff5252;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .card button:hover {
-            background: #ff1744;
-        }
-
-        .switch {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.9em;
-            cursor: pointer;
-            color: #ffebee;
-        }
-
-        .switch:hover {
-            text-decoration: underline;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #b71c1c;
-            color: #fff;
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khalk Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
+body{background:#121212;color:#fff;}
+header{background:#b71c1c;padding:20px;text-align:center;}
+header h1{font-size:2em;}
+.container{display:flex;justify-content:center;align-items:center;min-height:80vh;}
+.card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 20px rgba(0,0,0,0.5);}
+.card h2{text-align:center;margin-bottom:30px;}
+.card input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#333;color:#fff;}
+.card input::placeholder{color:#bbb;}
+.card button{width:100%;padding:12px;margin-top:20px;border:none;border-radius:8px;background:#ff5252;color:white;font-weight:bold;cursor:pointer;transition:.3s;}
+.card button:hover{background:#ff1744;}
+.switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
+.switch:hover{text-decoration:underline;}
+footer{text-align:center;padding:20px;background:#b71c1c;color:#fff;margin-top:20px;}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Mini Online Shop</h1>
-    </header>
+<header>
+<h1>Khalk Store</h1>
+</header>
 
-    <div class="container">
-        <div class="card" id="auth-card">
-            <h2 id="auth-title">Нэвтрэх</h2>
-            <input type="email" id="email" placeholder="Имэйл хаяг">
-            <input type="password" id="password" placeholder="Нууц үг">
-            <button id="auth-button">Нэвтрэх</button>
-            <div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
-        </div>
-    </div>
+<div class="container">
+<div class="card" id="auth-card">
+<h2 id="auth-title">Нэвтрэх</h2>
+<input type="tel" id="phone" placeholder="Утасны дугаар">
+<input type="password" id="password" placeholder="Нууц үг">
+<button id="auth-button">Нэвтрэх</button>
+<div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
+</div>
+</div>
 
-    <footer>
-        &copy; 2025 Mini Online Shop
-    </footer>
+<footer>
+&copy; 2025 Khalk Store
+</footer>
 
-    <script>
-        // Бүртгүүлэх болон нэвтрэхийг солих
-        const authCard = document.getElementById('auth-card');
-        const authTitle = document.getElementById('auth-title');
-        const authButton = document.getElementById('auth-button');
-        const switchAuth = document.getElementById('switch-auth');
-
-        let isLogin = true;
-
-        switchAuth.addEventListener('click', () => {
-            isLogin = !isLogin;
-            if(isLogin){
-                authTitle.textContent = 'Нэвтрэх';
-                authButton.textContent = 'Нэвтрэх';
-                switchAuth.textContent = 'Бүртгүүлэх бол энд дарна уу';
-            } else {
-                authTitle.textContent = 'Бүртгүүлэх';
-                authButton.textContent = 'Бүртгүүлэх';
-                switchAuth.textContent = 'Нэвтрэх бол энд дарна уу';
-            }
-        });
-
-        // Нэвтрэх/Бүртгүүлэх товч дээр дарах үйлдэл
-        authButton.addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            if(email === '' || password === ''){
-                alert('Бүх талбарыг бөглөнө үү!');
-                return;
-            }
-
-            if(isLogin){
-                alert(`Сайн байна! ${email} хаягаар амжилттай нэвтэрлээ.`);
-            } else {
-                alert(`Баяр хүргэе! ${email} хаягаар амжилттай бүртгүүллээ.`);
-            }
-
-            // Талбарыг цэвэрлэх
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-        });
-    </script>
+<script>
+const authTitle=document.getElementById('auth-title');
+const authButton=document.getElementById('auth-button');
+const switchAuth=document.getElementById('switch-auth');
+let isLogin=true;
+switchAuth.addEventListener('click',()=>{
+    isLogin=!isLogin;
+    if(isLogin){authTitle.textContent='Нэвтрэх';authButton.textContent='Нэвтрэх';switchAuth.textContent='Бүртгүүлэх бол энд дарна уу';}
+    else{authTitle.textContent='Бүртгүүлэх';authButton.textContent='Бүртгүүлэх';switchAuth.textContent='Нэвтрэх бол энд дарна уу';}
+});
+authButton.addEventListener('click',()=>{
+    const phone=document.getElementById('phone').value;
+    const password=document.getElementById('password').value;
+    if(phone===''||password===''){alert('Бүх талбарыг бөглөнө үү!');return;}
+    if(isLogin){alert(`Амжилттай нэвтэрлээ: ${phone}`);}
+    else{alert(`Амжилттай бүртгүүллээ: ${phone}`);}
+    document.getElementById('phone').value='';document.getElementById('password').value='';
+});
+</script>
 </body>
 </html>
