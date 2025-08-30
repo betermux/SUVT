@@ -38,24 +38,71 @@ header img:hover{transform: scale(1.2);}
 </div>
 </div>
 
-<script>
-const authTitle=document.getElementById('auth-title');
-const authButton=document.getElementById('auth-button');
-const switchAuth=document.getElementById('switch-auth');
-let isLogin=true;
-switchAuth.addEventListener('click',()=>{
-    isLogin=!isLogin;
-    if(isLogin){authTitle.textContent='Нэвтрэх';authButton.textContent='Нэвтрэх';switchAuth.textContent='Бүртгүүлэх бол энд дарна уу';}
-    else{authTitle.textContent='Бүртгүүлэх';authButton.textContent='Бүртгүүлэх';switchAuth.textContent='Нэвтрэх бол энд дарна уу';}
-});
-authButton.addEventListener('click',()=>{
-    const phone=document.getElementById('phone').value;
-    const password=document.getElementById('password').value;
-    if(phone===''||password===''){alert('Бүх талбарыг бөглөнө үү!');return;}
-    if(isLogin){alert(`Амжилттай нэвтэрлээ: ${phone}`);}
-    else{alert(`Амжилттай бүртгүүллээ: ${phone}`);}
-    document.getElementById('phone').value='';document.getElementById('password').value='';
-});
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+    authDomain: "khalkh-store.firebaseapp.com",
+    databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+    projectId: "khalkh-store",
+    storageBucket: "khalkh-store.firebasestorage.app",
+    messagingSenderId: "205879441792",
+    appId: "1:205879441792:web:677a6abe7912d6436a2965",
+    measurementId: "G-6M9HZM8G9N"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // Auth logic
+  const authTitle = document.getElementById('auth-title');
+  const authButton = document.getElementById('auth-button');
+  const switchAuth = document.getElementById('switch-auth');
+  let isLogin = true;
+
+  switchAuth.addEventListener('click', () => {
+    isLogin = !isLogin;
+    if (isLogin) {
+      authTitle.textContent = 'Нэвтрэх';
+      authButton.textContent = 'Нэвтрэх';
+      switchAuth.textContent = 'Бүртгүүлэх бол энд дарна уу';
+    } else {
+      authTitle.textContent = 'Бүртгүүлэх';
+      authButton.textContent = 'Бүртгүүлэх';
+      switchAuth.textContent = 'Нэвтрэх бол энд дарна уу';
+    }
+  });
+
+  authButton.addEventListener('click', () => {
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    if(phone === '' || password === '') { alert('Бүх талбарыг бөглөнө үү!'); return; }
+
+    const userRef = ref(database, 'users/' + phone);
+
+    if(isLogin){
+      // Нэвтрэх
+      get(userRef).then((snapshot) => {
+        if(snapshot.exists()){
+          if(snapshot.val().password === password){
+            alert(`Амжилттай нэвтэрлээ: ${phone}`);
+            // Хэрэглэгч өөрийн өгөгдлийг update хийх боломжтой
+          } else { alert('Нууц үг буруу!'); }
+        } else { alert('Энэ дугаараар бүртгэл олдсонгүй!'); }
+      });
+    } else {
+      // Бүртгүүлэх
+      set(userRef, { password: password })
+      .then(() => { alert(`Амжилттай бүртгүүллээ: ${phone}`); })
+      .catch(() => { alert('Алдаа гарлаа!'); });
+    }
+
+    document.getElementById('phone').value = '';
+    document.getElementById('password').value = '';
+  });
 </script>
 </body>
 </html>
