@@ -51,6 +51,8 @@ header{
     display: none; /* Hidden until logged in */
     flex-shrink: 0; /* Prevent cart icon from shrinking */
     margin-left: 20px; /* Add some space from user-phone */
+    /* Adjust padding if emoji only looks too big */
+    padding: 8px 12px; /* Slightly reduced padding for emoji only */
 }
 #cart-icon:hover {
     background: #ff1744;
@@ -71,7 +73,7 @@ header{
 
 /* Shop */
 .shop-container{padding:40px;color:#fff;display:none;}
-.shop-title{text-align:center;font-size:2em;margin-bottom:30px;}
+.shop-title{text-align:center;font-size:2em;margin-bottom:30px;} /* This is the element to change */
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
 .product-card{
     background:#1e1e1e;
@@ -137,7 +139,8 @@ header{
 <header>
     <img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
     <div id="user-phone"></div>
-    <div id="cart-icon">🛒 Сагс (<span id="cart-count">0</span>)</div>
+    <!-- Changed cart-icon content -->
+    <div id="cart-icon">🛒 <span id="cart-count">0</span></div>
 </header>
 
 <!-- Auth Container -->
@@ -153,7 +156,8 @@ header{
 
 <!-- Shop Container -->
 <div class="shop-container" id="shop-container">
-    <h2 class="shop-title">Бараа</h2>
+    <!-- Changed shop-title content -->
+    <h2 class="shop-title">Бараанууд</h2>
     <div class="products">
         <div class="product-card">
             <img src="assets/product1.png" alt="Бараа 1">
