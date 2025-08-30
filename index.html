@@ -1,12 +1,147 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Khalk Store</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: #000;
+    }
+    header img {
+      height: 40px;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .item {
+      background: #1c1c1c;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .item:hover {
+      transform: translateY(-5px);
+    }
+    .item img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 10px;
+      background: crimson;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #a0002e;
+    }
+
+    /* Panel */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .panel {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 350px;
+      width: 90%;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .panel h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .panel input, .panel textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+    .panel button {
+      width: 100%;
+    }
+    .close {
+      background: #444;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="assets/khalk.png" alt="Logo"/>
+    <h1>Khalk Store</h1>
+  </header>
+
+  <main class="container">
+    <div class="item">
+      <img src="https://via.placeholder.com/200x150" alt="Бараа 1">
+      <h3>Бараа 1</h3>
+      <p>Үнэ: 25,000₮</p>
+      <button class="btn" onclick="openOrderPanel('Бараа 1')">Захиалах</button>
+    </div>
+    <div class="item">
+      <img src="https://via.placeholder.com/200x150" alt="Бараа 2">
+      <h3>Бараа 2</h3>
+      <p>Үнэ: 45,000₮</p>
+      <button class="btn" onclick="openOrderPanel('Бараа 2')">Захиалах</button>
+    </div>
+  </main>
+
+  <!-- Захиалгын panel -->
+  <div class="overlay" id="orderOverlay">
+    <div class="panel">
+      <h2>Захиалга</h2>
+      <form id="orderForm">
+        <input type="text" id="customerName" placeholder="Нэр" required />
+        <input type="text" id="phone" placeholder="Утас" required />
+        <textarea id="address" placeholder="Дэлгэрэнгүй хаяг" rows="3" required></textarea>
+        <input type="hidden" id="selectedItem" />
+        <button type="submit" class="btn">Захиалах</button>
+        <button type="button" class="btn close" onclick="closeOrderPanel()">Болих</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase -->
   <script type="module">
-    // Firebase импорт
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -24,107 +159,65 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    let selectedItem = null;
+    // UI control
+    const overlay = document.getElementById("orderOverlay");
+    const selectedItemInput = document.getElementById("selectedItem");
 
-    function showOrderPanel(itemName) {
-      selectedItem = itemName;
-      document.getElementById("order-panel").classList.remove("translate-x-full");
+    function openOrderPanel(itemName) {
+      selectedItemInput.value = itemName;
+      overlay.style.display = "flex";
     }
+    window.openOrderPanel = openOrderPanel;
 
     function closeOrderPanel() {
-      document.getElementById("order-panel").classList.add("translate-x-full");
+      overlay.style.display = "none";
     }
+    window.closeOrderPanel = closeOrderPanel;
 
-    function saveOrder(customerName, phone, address, item) {
-      const orderRef = ref(db, 'orders');
-      push(orderRef, {
-        customerName: customerName,
+    // Autofill localStorage
+    window.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("customerName")) {
+        document.getElementById("customerName").value = localStorage.getItem("customerName");
+      }
+      if (localStorage.getItem("phone")) {
+        document.getElementById("phone").value = localStorage.getItem("phone");
+      }
+      if (localStorage.getItem("address")) {
+        document.getElementById("address").value = localStorage.getItem("address");
+      }
+    });
+
+    // Form submit
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("customerName").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const item = document.getElementById("selectedItem").value;
+
+      if (!name || !phone || !address) {
+        alert("Бүх талбарыг бөглөнө үү!");
+        return;
+      }
+
+      // Save to localStorage
+      localStorage.setItem("customerName", name);
+      localStorage.setItem("phone", phone);
+      localStorage.setItem("address", address);
+
+      // Save to Firebase
+      push(ref(db, "orders"), {
+        name: name,
         phone: phone,
         address: address,
         item: item,
-        timestamp: Date.now()
-      })
-      .then(() => {
-        alert("Захиалга амжилттай илгээгдлээ ✅");
-        closeOrderPanel();
-      })
-      .catch(err => {
-        console.error("Firebase push алдаа:", err);
-        alert("Алдаа гарлаа, дахин оролдоно уу ❌");
+        time: new Date().toISOString()
       });
-    }
 
-    window.showOrderPanel = showOrderPanel;
-    window.closeOrderPanel = closeOrderPanel;
-
-    window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("orderForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const name = document.getElementById("customerName").value;
-        const phone = document.getElementById("phone").value;
-        const address = document.getElementById("address").value;
-
-        if (!name || !phone || !address) {
-          alert("Бүх талбарыг бөглөнө үү ⚠️");
-          return;
-        }
-
-        saveOrder(name, phone, address, selectedItem);
-      });
+      alert("Захиалга амжилттай илгээгдлээ ✅");
+      closeOrderPanel();
     });
   </script>
-</head>
-<body class="bg-black text-white font-sans">
-
-  <!-- Header -->
-  <header class="flex items-center p-4 border-b border-gray-800">
-    <img src="assets/khalk.png" alt="Khalk Store" class="h-10 mr-3">
-    <h1 class="text-xl font-bold">Khalk Store</h1>
-  </header>
-
-  <!-- Products -->
-  <main class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-    <div class="bg-gray-900 p-4 rounded-2xl shadow hover:scale-105 transition-transform">
-      <h2 class="text-lg font-semibold mb-2">Бараа 1</h2>
-      <p class="text-gray-400 mb-3">Энгийн тайлбар</p>
-      <button onclick="showOrderPanel('Бараа 1')" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg">
-        Захиалах
-      </button>
-    </div>
-
-    <div class="bg-gray-900 p-4 rounded-2xl shadow hover:scale-105 transition-transform">
-      <h2 class="text-lg font-semibold mb-2">Бараа 2</h2>
-      <p class="text-gray-400 mb-3">Энгийн тайлбар</p>
-      <button onclick="showOrderPanel('Бараа 2')" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg">
-        Захиалах
-      </button>
-    </div>
-  </main>
-
-  <!-- Order Panel -->
-  <div id="order-panel"
-    class="fixed top-0 right-0 w-80 h-full bg-gray-900 text-white p-6 transform translate-x-full transition-transform duration-500 ease-in-out shadow-2xl z-50 rounded-l-2xl">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold">Захиалга хийх</h2>
-      <button onclick="closeOrderPanel()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
-    </div>
-
-    <form id="orderForm" class="space-y-4">
-      <input id="customerName" type="text" placeholder="Таны нэр"
-        class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-
-      <input id="phone" type="text" placeholder="Утас"
-        class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-
-      <textarea id="address" placeholder="Хаяг дэлгэрэнгүй"
-        class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 h-24 resize-none"></textarea>
-
-      <button type="submit"
-        class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-        Захиалах
-      </button>
-    </form>
-  </div>
-
 </body>
 </html>
