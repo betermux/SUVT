@@ -14,15 +14,15 @@ body {
 }
 
 header {
-  background:#d32f2f;
+  background: none; /* Улаан box-ыг хасав */
   padding:15px 20px;
   display:flex;
   align-items:center;
   gap:10px;
-  border-bottom:2px solid #aa0000;
+  border-bottom:1px solid #333;
 }
 header img { height:40px; }
-header h1 { font-size:1.4rem; margin:0; font-weight:700; }
+header h1 { font-size:1.4rem; margin:0; font-weight:700; color:#fff; }
 
 .products {
   display:flex;
@@ -35,7 +35,7 @@ header h1 { font-size:1.4rem; margin:0; font-weight:700; }
   padding:12px;
   border-radius:12px;
   text-align:center;
-  transition:transform 0.2s ease;
+  transition:transform 0.15s ease;
 }
 .product:hover{ transform:scale(1.02); }
 .product img{ width:100%; max-width:200px; border-radius:10px; }
@@ -62,10 +62,10 @@ header h1 { font-size:1.4rem; margin:0; font-weight:700; }
 #order-panel{
   position:fixed; top:50%; left:50%;
   transform:translate(-50%,-50%) scale(0);
-  background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+  background:#1e1e1e;
   padding:25px 30px;
   border-radius:14px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.7);
+  box-shadow:0 8px 20px rgba(0,0,0,0.7);
   z-index:1000;
   transition:transform 0.3s ease, opacity 0.3s;
   width:90%; max-width:320px;
@@ -86,10 +86,10 @@ header h1 { font-size:1.4rem; margin:0; font-weight:700; }
 
 #order-panel .submit-btn{
   width:100%; padding:12px; border:none; border-radius:8px;
-  background:#00a600; color:#fff; font-size:1rem; cursor:pointer;
+  background:#d32f2f; color:#fff; font-size:1rem; cursor:pointer;
   transition:background 0.2s;
 }
-#order-panel .submit-btn:hover{ background:#009500; }
+#order-panel .submit-btn:hover{ background:#b71c1c; }
 
 #panel-message{
   position:fixed; top:15px; left:50%;
