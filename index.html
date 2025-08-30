@@ -3,168 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khalk Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<title>Khalk Shop</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
-body{background:#121212;color:#fff;overflow-x:hidden;position:relative;}
-header{padding:30px 20px;text-align:center;position:relative;height:100px;}
-#logo{width:120px;transition: all 0.8s ease;}
-#user-phone{position:absolute;top:20px;opacity:0;transition: opacity 0.8s ease; font-weight:bold; color:#fff;}
-
-.container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
-.card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 25px rgba(0,0,0,0.5);transform: translateY(-50px);opacity:0;animation: slideDown 0.8s forwards;}
-@keyframes slideDown{to{transform: translateY(0);opacity:1;}}
-.card h2{text-align:center;margin-bottom:30px;}
-.card input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#333;color:#fff;}
-.card input::placeholder{color:#bbb;}
-.card button{width:100%;padding:12px;margin-top:20px;border:none;border-radius:8px;background:#ff5252;color:white;font-weight:bold;cursor:pointer;transition:.3s;}
-.card button:hover{background:#ff1744;transform: scale(1.05);}
-.switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
-.switch:hover{text-decoration:underline;}
-
-.shop-container{padding:40px;color:#fff;display:none;}
-.shop-title{text-align:center;font-size:2em;margin-bottom:30px;}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
-.product-card{background:#1e1e1e;padding:20px;border-radius:12px;text-align:center;transition: transform 0.3s, box-shadow 0.3s;}
-.product-card:hover{transform: translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.5);}
-.product-card img{width:100%;border-radius:10px;margin-bottom:15px;}
-.product-card h3{margin-bottom:10px;}
-.product-card p{margin-bottom:15px;}
-.product-card button{padding:10px 15px;border:none;border-radius:8px;background:#ff5252;color:#fff;font-weight:bold;cursor:pointer;transition:.3s;}
-.product-card button:hover{background:#ff1744;}
+body { font-family:'Segoe UI',sans-serif; background:#0b0b0b; color:#fff; margin:0; padding:0;}
+header { background:#d32f2f; color:#fff; display:flex; align-items:center; justify-content:center; padding:10px 0; }
+header img { height:40px; margin-right:8px; }
+.container { max-width:360px; margin:20px auto; padding:0 16px; }
+input, button { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:none; }
+button { background:#d32f2f; color:#fff; font-weight:bold; cursor:pointer; }
+.toggle { background:#111; color:#fff; margin-top:4px; font-size:0.9rem; cursor:pointer; text-align:center; }
+#shop { display:none; padding:16px; max-width:800px; margin:0 auto; }
+#shop ul { list-style:none; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; }
+#shop li { background:#111; border-radius:10px; padding:12px; text-align:center; transition: transform 0.2s ease; }
+#shop li:hover { transform: scale(1.05); }
+#shop img { width:100%; border-radius:8px; margin-bottom:8px; }
+#shop b { display:block; margin-bottom:4px; font-size:1.1rem; }
+.price { color:#d32f2f; font-weight:bold; }
 </style>
 </head>
 <body>
-<header>
-<img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
-<div id="user-phone"></div>
-</header>
 
-<!-- Auth Container -->
-<div class="container" id="auth-container">
-<div class="card" id="auth-card">
-<h2 id="auth-title">Нэвтрэх</h2>
-<input type="tel" id="phone" placeholder="Утасны дугаар">
-<input type="password" id="password" placeholder="Нууц үг">
-<button id="auth-button">Нэвтрэх</button>
-<div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
-</div>
+<header><img src="assets/khalk.png" alt="Logo">Khalk Shop</header>
+
+<div class="container" id="authSection">
+  <h3 id="formTitle">Нэвтрэх</h3>
+  <input type="text" id="phone" placeholder="Утасны дугаар">
+  <input type="password" id="password" placeholder="Нууц үг">
+  <input type="password" id="confirmPassword" placeholder="Нууц үг давтах" style="display:none;">
+  <button id="actionBtn" onclick="login()">Нэвтрэх</button>
+  <div class="toggle" onclick="toggleForm()">Шинэ хэрэглэгч үү? Бүртгүүлэх</div>
 </div>
 
-<!-- Shop Container -->
-<div class="shop-container" id="shop-container">
-<h2 class="shop-title">Бараа</h2>
-<div class="products">
-<div class="product-card">
-<img src="assets/product1.png" alt="Бараа 1">
-<h3>Бараа 1</h3>
-<p>Үнэ: 150,000₮</p>
-<button>Сагсанд нэмэх</button>
-</div>
-<div class="product-card">
-<img src="assets/product2.png" alt="Бараа 2">
-<h3>Бараа 2</h3>
-<p>Үнэ: 200,000₮</p>
-<button>Сагсанд нэмэх</button>
-</div>
-</div>
+<div id="shop">
+  <h3>Дэлгүүр</h3>
+  <ul id="productGrid"></ul>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref as dbRef, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
   authDomain: "khalkh-store.firebaseapp.com",
   databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
   projectId: "khalkh-store",
-  storageBucket: "khalkh-store.firebasestorage.app",
+  storageBucket: "khalkh-store.appspot.com",
   messagingSenderId: "205879441792",
-  appId: "1:205879441792:web:677a6abe7912d6436a2965",
-  measurementId: "G-6M9HZM8G9N"
+  appId: "1:205879441792:web:fb71f2c84f8c16b36a2965",
+  measurementId: "G-DHB8PQZ514"
 };
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-let currentUserPhone = null;
+let isRegister = false;
 
-// Elements
-const authTitle = document.getElementById('auth-title');
-const authButton = document.getElementById('auth-button');
-const switchAuth = document.getElementById('switch-auth');
-const userPhoneDiv = document.getElementById('user-phone');
-const logo = document.getElementById('logo');
-let isLogin = true;
+function toggleForm(){
+  isRegister = !isRegister;
+  document.getElementById("formTitle").innerText = isRegister ? "Хэрэглэгч бүртгүүлэх" : "Нэвтрэх";
+  document.getElementById("actionBtn").innerText = isRegister ? "Бүртгүүлэх" : "Нэвтрэх";
+  document.getElementById("confirmPassword").style.display = isRegister ? "block" : "none";
+}
 
-// Switch login/register
-switchAuth.addEventListener('click', () => {
-  isLogin = !isLogin;
-  authTitle.textContent = isLogin ? 'Нэвтрэх' : 'Бүртгүүлэх';
-  authButton.textContent = isLogin ? 'Нэвтрэх' : 'Бүртгүүлэх';
-  switchAuth.textContent = isLogin ? 'Бүртгүүлэх бол энд дарна уу' : 'Нэвтрэх бол энд дарна уу';
-});
+function login(){
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-// Login/Register
-authButton.addEventListener('click', () => {
-  const phone = document.getElementById('phone').value;
-  const password = document.getElementById('password').value;
-  if(phone === '' || password === '') { alert('Бүх талбарыг бөглөнө үү!'); return; }
+  if(!phone || !password){ alert("Бүх талбарыг бөглөнө үү"); return; }
 
-  const userRef = ref(database, 'users/' + phone);
+  const userRef = dbRef(database, 'users/' + phone);
 
-  if(isLogin){
-    get(userRef).then(snapshot => {
-      if(snapshot.exists() && snapshot.val().password === password){
-        currentUserPhone = phone;
-
-        // Animation: логог жижигрүүлэх, зүүн дээд буланд шилжүүлэх
-        logo.style.width = '50px';
-        logo.style.position = 'absolute';
-        logo.style.top = '20px';
-        logo.style.left = '20px';
-        logo.style.transition = 'all 0.8s ease';
-
-        // Нэвтэрсэн дугаарыг харуулах fade-in
-        userPhoneDiv.textContent = phone;
-        userPhoneDiv.style.opacity = '1';
-
-        // Auth → Shop
-        document.getElementById('auth-container').style.display = 'none';
-        document.getElementById('shop-container').style.display = 'block';
-        alert(`Амжилттай нэвтэрлээ: ${phone}`);
+  get(userRef).then(snapshot=>{
+    if(isRegister){
+      if(password !== confirmPassword){ alert("Нууц үг хоорондоо таарахгүй байна"); return; }
+      if(snapshot.exists()){
+        alert("Энэ утасны дугаар аль хэдийн бүртгэлтэй");
       } else {
-        alert('Дугаар эсвэл нууц үг буруу!');
+        set(userRef, {password:password, orders:[]})
+        .then(()=>{ 
+          alert("Бүртгэл амжилттай үүслээ"); 
+          showShop();
+        })
+        .catch(err=>{ console.error(err); alert("Алдаа гарлаа"); });
       }
-    });
-  } else {
-    set(userRef, { password: password })
-    .then(() => { alert(`Амжилттай бүртгүүллээ: ${phone}`); })
-    .catch(() => { alert('Алдаа гарлаа!'); });
-  }
+    } else {
+      if(snapshot.exists()){
+        const data = snapshot.val();
+        if(data.password===password){
+          alert("Амжилттай нэвтэрлээ");
+          showShop();
+        } else { alert("Нууц үг буруу"); }
+      } else { alert("Хэрэглэгч олдсонгүй"); }
+    }
+  }).catch(err=>{ console.error(err); alert("Алдаа гарлаа"); });
+}
 
-  document.getElementById('phone').value = '';
-  document.getElementById('password').value = '';
-});
+// --- Shop page ---
+const products = [
+  {img:'assets/product1.jpg', name:'Бараа 1', price:25000},
+  {img:'assets/product2.jpg', name:'Бараа 2', price:45000},
+  {img:'assets/product3.jpg', name:'Бараа 3', price:32000},
+  {img:'assets/product4.jpg', name:'Бараа 4', price:28000},
+];
 
-// Add to cart
-document.querySelectorAll('.product-card button').forEach((btn)=>{
-  btn.addEventListener('click', ()=>{
-    if(!currentUserPhone){ alert('Нэвтэрсэн байх шаардлагатай!'); return; }
-    const productName = btn.parentElement.querySelector('h3').innerText;
-    const productPrice = btn.parentElement.querySelector('p').innerText;
-
-    const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
-    get(cartRef).then(snapshot => {
-      let cart = snapshot.exists() ? snapshot.val() : [];
-      cart.push({ name: productName, price: productPrice });
-      set(cartRef, cart).then(()=> alert(`${productName} сагсанд нэмэгдлээ!`));
-    });
+function showShop(){
+  document.getElementById("authSection").style.display = "none";
+  const shopDiv = document.getElementById("shop");
+  shopDiv.style.display = "block";
+  const grid = document.getElementById("productGrid");
+  grid.innerHTML = '';
+  products.forEach(p=>{
+    const li = document.createElement("li");
+    li.innerHTML = `<img src="${p.img}"><b>${p.name}</b><span class="price">${p.price}₮</span>`;
+    grid.appendChild(li);
   });
-});
+}
 </script>
+
 </body>
 </html>
