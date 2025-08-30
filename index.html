@@ -1,199 +1,237 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="mn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Khalk Store</title>
-  <meta name="description" content="Khalk Store - Улаан-Хар минимал онлайн дэлгүүр" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Таны Онлайн Шоп — Ulaan/Har Загварт</title>
+  <meta name="description" content="Ulaan & Har өнгөтэй minimal online shop" />
   <style>
-    :root{
-      --bg:#0b0b0c;
-      --panel:#131316;
-      --muted:#1b1b1f;
-      --text:#e5e7eb;
-      --subtle:#9ca3af;
-      --brand:#ef233c;
-      --brand-600:#dc1f36;
-      --success:#22c55e;
-      --warn:#f59e0b;
-      --shadow:0 10px 30px rgba(239,35,60,.2);
-      --radius:18px;
-    }
+    :root{--red:#c70000;--dark:#0b0b0b;--muted:#f4f4f4;--accent:#111}
     *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-    button{font:inherit}
-    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#fff 0%, #fff 70%);color:var(--dark)}
+    a{text-decoration:none;color:inherit}/* HEADER */
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--dark);color:#fff;position:sticky;top:0;z-index:40}
+.brand{display:flex;gap:12px;align-items:center}
+.brand img{height:44px;width:auto}
+.brand h1{font-size:18px;margin:0;letter-spacing:0.6px}
+.nav{display:flex;gap:12px;align-items:center}
+.nav a{color:#fff;padding:8px 10px;border-radius:8px}
+.nav a:hover{background:rgba(255,255,255,0.06)}
 
-    .nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,11,12,.9),rgba(11,11,12,.7));backdrop-filter:saturate(150%) blur(6px);border-bottom:1px solid #1f1f22}
-    .nav-inner{display:flex;align-items:center;gap:14px;padding:14px 0}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
-    .logo{width:34px;height:34px;border-radius:12px;overflow:hidden}
-    .logo img{width:100%;height:100%;object-fit:cover}
-    .search{flex:1;display:flex;align-items:center;gap:8px;background:var(--muted);border:1px solid #232327;border-radius:14px;padding:10px 12px}
-    .search input{flex:1;background:transparent;border:0;outline:0;color:var(--text)}
-    .nav-actions{display:flex;align-items:center;gap:10px}
-    .btn{background:var(--brand);border:0;color:white;padding:10px 14px;border-radius:14px;font-weight:600;box-shadow:var(--shadow);cursor:pointer;transition:transform .08s ease, background .2s}
-    .btn:hover{background:var(--brand-600);transform:translateY(-1px)}
-    .icon-btn{position:relative;display:grid;place-items:center;width:44px;height:44px;background:var(--muted);border:1px solid #232327;border-radius:14px;cursor:pointer}
-    .badge{position:absolute;top:-6px;right:-6px;background:var(--brand);color:#fff;border-radius:999px;padding:2px 7px;font-size:12px;font-weight:700;box-shadow:var(--shadow)}
+.search{display:flex;align-items:center;background:#111;padding:6px;border-radius:10px}
+.search input{border:0;background:transparent;color:#fff;outline:none;width:200px}
+.icon{display:inline-block;padding:8px}
 
-    .hero{position:relative;overflow:hidden;border-bottom:1px solid #1f1f22}
-    .hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;padding:42px 0}
-    .hero h1{font-size:clamp(28px,4.5vw,48px);line-height:1.05;margin:0 0 10px}
-    .hero p{color:var(--subtle);margin:0 0 20px}
-    .hero .cta{display:flex;gap:10px;flex-wrap:wrap}
-    .hero-card{background:linear-gradient(180deg,#141418,#0f0f12);border:1px solid #232327;border-radius:var(--radius);padding:18px}
-    .hero-img{border-radius:var(--radius);aspect-ratio:16/10;background:radial-gradient(120% 120% at 70% 10%,rgba(239,35,60,.35),rgba(239,35,60,.12) 35%,transparent 60%), url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop') center/cover;box-shadow:0 20px 50px rgba(239,35,60,.15)}
+/* HERO */
+.hero{padding:44px 20px;display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center}
+.hero-left h2{font-size:36px;margin:0 0 12px;color:var(--red)}
+.hero-left p{margin:0 0 18px;color:#333}
+.cta{background:var(--red);color:#fff;padding:12px 18px;border-radius:10px;display:inline-block}
 
-    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:24px 0}
-    .field{display:flex;align-items:center;gap:8px;background:var(--muted);border:1px solid #232327;border-radius:14px;padding:10px 12px}
-    select,.range{appearance:none;background:transparent;border:0;color:var(--text);outline:0}
-    .pill{background:transparent;border:1px dashed #2a2a30;border-radius:999px;padding:8px 12px;color:var(--subtle)}
+.hero-right{background:#111;color:#fff;padding:18px;border-radius:12px}
+.hero-right h3{margin:0 0 10px}
 
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    @media (max-width:1000px){.hero-inner{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:560px){.grid{grid-template-columns:1fr}.nav-inner{flex-wrap:wrap}}
-    .card{background:linear-gradient(180deg,#131316,#101013);border:1px solid #232327;border-radius:var(--radius);overflow:hidden;transition:transform .12s ease, box-shadow .2s}
-    .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.35)}
-    .card-img{position:relative;aspect-ratio:1/1;background:#0e0e12}
-    .card-img img{width:100%;height:100%;object-fit:cover}
-    .price{display:flex;gap:10px;align-items:center;margin:8px 0 0}
-    .old{color:#777;text-decoration:line-through}
-    .discount{color:#fff;background:linear-gradient(180deg,#ff6b81,var(--brand));padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}
-    .card-body{padding:14px}
-    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--subtle);font-size:13px}
-    .add{margin-top:10px;width:100%}
+/* PRODUCTS GRID */
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.card{border:1px solid #eee;border-radius:12px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.card .thumb{height:180px;background:linear-gradient(180deg,#eee,#ddd);display:flex;align-items:center;justify-content:center}
+.card img{max-width:100%;max-height:100%;object-fit:contain}
+.card .body{padding:12px;flex:1;display:flex;flex-direction:column}
+.title{font-weight:600;margin:0 0 6px}
+.price{margin-top:auto;font-size:16px;font-weight:700;color:var(--red)}
+.actions{display:flex;gap:8px;margin-top:10px}
+.btn{padding:8px 10px;border-radius:8px;border:0;cursor:pointer}
+.btn-primary{background:var(--red);color:#fff}
+.btn-ghost{background:#111;color:#fff}
 
-    .drawer{position:fixed;inset:0;pointer-events:none}
-    .drawer.show{pointer-events:auto}
-    .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .2s}
-    .drawer.show .backdrop{opacity:1}
-    .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:linear-gradient(180deg,#141418,#0f0f12);border-left:1px solid #232327;transform:translateX(100%);transition:transform .25s}
-    .drawer.show .panel{transform:translateX(0)}
-    .panel header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid #232327}
-    .cart-items{padding:12px;height:60vh;overflow:auto}
-    .cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;background:#111114;border:1px solid #232327;border-radius:14px;padding:8px;margin-bottom:10px}
-    .qty{display:flex;align-items:center;gap:8px}
-    .qty button{width:28px;height:28px;border-radius:8px;background:var(--muted);border:1px solid #2a2a30;color:#fff;cursor:pointer}
-    .panel footer{border-top:1px solid #232327;padding:16px}
-    .total{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+/* SIDEBAR CART */
+.cart-drawer{position:fixed;right:18px;bottom:18px;background:var(--dark);color:#fff;padding:12px;border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,0.25)}
+.cart-list{min-width:260px}
+.cart-item{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.06)}
+.cart-item img{width:44px;height:44px;object-fit:cover;border-radius:6px}
+.cart-total{font-weight:700;margin-top:8px;color:var(--red)}
 
-    footer.site{margin-top:40px;padding:24px 0;border-top:1px solid #1f1f22;color:var(--subtle)}
-    .socials{display:flex;gap:10px}
-    .socials a{display:grid;place-items:center;width:38px;height:38px;border:1px solid #232327;border-radius:12px;background:var(--muted)}
+/* FOOTER */
+footer{padding:22px;text-align:center;color:#666}
 
-    .row{display:flex;gap:10px;align-items:center}
-    .spacer{flex:1}
-    .tag{font-size:12px;color:#bbb;border:1px solid #2a2a30;border-radius:999px;padding:3px 8px}
-    .form-card{background:linear-gradient(180deg,#141418,#0f0f12);border:1px solid #232327;border-radius:var(--radius);padding:20px;margin-top:30px}
-    .form-card input{width:100%;padding:10px 12px;border-radius:14px;border:1px solid #232327;background:var(--muted);color:var(--text);margin-bottom:12px}
-    .form-card button{width:100%}
+/* Responsive */
+@media (max-width:880px){
+  .hero{grid-template-columns:1fr;gap:18px}
+  .search input{width:110px}
+  .brand h1{display:none}
+}
+
+/* Tiny utilities */
+.muted{color:#666;font-size:13px}
+
   </style>
 </head>
 <body>
+  <header class="site-header">
+    <div class="brand">
+      <img src="assets/khalk.png" alt="Logo">
+      <div>
+        <h1>Khalk Shop</h1>
+        <div class="muted">Ulaan · Har загварт</div>
+      </div>
+    </div><div style="display:flex;gap:12px;align-items:center">
   <nav class="nav">
-    <div class="container nav-inner">
-      <a class="brand" href="#">
-        <div class="logo"><img src="assets/khalk.png" alt="Khalk Store Logo"></div>
-        <span>Khalk Store</span>
-      </a>
-      <div class="search" role="search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="11" r="7" stroke="#9ca3af" stroke-width="2"/></svg>
-        <input id="search" type="search" placeholder="Хайх… (жишээ: пүүз)" />
-      </div>
-      <div class="nav-actions">
-        <button id="openCart" class="icon-btn" aria-label="Сагс нээх">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 6h15l-1.5 9h-12z" stroke="#e5e7eb" stroke-width="1.7"/><circle cx="9" cy="20" r="1.4" fill="#e5e7eb"/><circle cx="18" cy="20" r="1.4" fill="#e5e7eb"/></svg>
-          <span id="cartCount" class="badge">0</span>
-        </button>
-        <a class="btn" href="#products">Бүтээгдэхүүн</a>
-      </div>
-    </div>
+    <a href="#products">Бүх бараа</a>
+    <a href="#collections">Цуглуулга</a>
+    <a href="#about">Тухай</a>
   </nav>
 
-  <section class="hero">
-    <div class="container hero-inner">
-      <div class="hero-card">
-        <span class="tag">Шинэ коллекц</span>
-        <h1>Khalk Store × Улаан Хар стиль — <span style="color:var(--brand)">Flash Sale</span> 48 цаг!</h1>
-        <p>Код: <b>RED90</b> ашиглаад 90,000₮-с дээш үнэтэй бараанд 9% хямдрал.</p>
-        <div class="cta">
-          <a class="btn" href="#products">Одоо үзэх</a>
-          <a class="pill" href="#contact">Холбогдох</a>
-        </div>
-      </div>
-      <div class="hero-img"></div>
-    </div>
-  </section>
+  <div class="search">
+    <span class="icon">🔍</span>
+    <input id="search" placeholder="Хайх...">
+  </div>
 
-  <main class="container">
-    <div class="controls" id="controls">
-      <div class="field">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
-        <select id="category">
-          <option value="all">Бүх ангилал</option>
-          <option value="sneaker">Пүүз</option>
-          <option value="hoodie">Худи</option>
-          <option value="watch">Цаг</option>
-          <option value="bag">Цүнх</option>
-        </select>
-      </div>
-      <div class="field">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
-        <select id="sort">
-          <option value="popular">Эрэмбэ: Популяр</option>
-          <option value="price-asc">Үнэ: бага → их</option>
-          <option value="price-desc">Үнэ: их → бага</option>
-        </select>
-      </div>
-      <div class="spacer"></div>
-      <span class="pill">Монголд хүргэлт • 24–72 цаг</span>
-    </div>
+  <button id="cartToggle" class="btn" style="background:transparent;color:#fff">🛒 <span id="cartCount">0</span></button>
+</div>
 
-    <section id="products" class="grid"></section>
-
-    <section id="register" class="form-card">
-      <h2 style="margin:0 0 12px">Бүртгүүлэх</h2>
-      <form id="regForm">
-        <input type="tel" id="phone" placeholder="Утасны дугаар" required>
-        <button class="btn" type="submit">Бүртгүүлэх</button>
-      </form>
-    </section>
-
-    <section id="contact" style="margin-top:36px">
-      <div class="hero-card">
-        <h2 style="margin:0 0 8px">Холбоо барих</h2>
-        <div class="row">
-          <div class="tag">Утас: 80866494</div>
-          <div class="tag">Утас: 88580646</div>
-          <div class="tag">Facebook: @khalkstore</div>
-          <div class="tag">Instagram: @khalkstore</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site">
-    <div class="container row" style="justify-content:space-between">
-      <div>© <span id="year"></span> Khalk Store — Бүх эрх хамгаалагдсан.</div>
-      <div class="socials">
-        <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 8h-2a2 2 0 00-2 2v10" stroke="#e5e7eb" stroke-width="2"/><path d="M9 13h6" stroke="#e5e7eb" stroke-width="2"/></svg></a>
-        <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#e5e7eb" stroke-width="2"/><circle cx="16.5" cy="7.5" r="1" fill="#e5e7eb"/><circle cx="12" cy="12" r="3.5" stroke="#e5e7eb" stroke-width="2"/></svg></a>
-        <a href="#" aria-label="TikTok"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 3v6a6 6 0 11-4.5 10.3" stroke="#e5e7eb" stroke-width="2"/></svg></a>
+  </header>  <main>
+    <section class="hero container">
+      <div class="hero-left">
+        <h2>Шинэ Ulaan/Black коллекц — Хязгаарлагдмал</h2>
+        <p>Minimal, чанартай, Монгол орон: хурдан хүргэлт, төлбөр — бэлэн эсвэл банкаар.</p>
+        <a class="cta" href="#products">Шууд үзэх</a>
+        <div style="margin-top:14px" class="muted">Үйлчилгээ: Чөлөөт буцаалт 7 хоног</div>
+      </div><aside class="hero-right">
+    <h3>Хамгийн их борлуулалт</h3>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:12px">
+      <img src="assets/khalk.png" alt="thumb" style="width:72px;height:72px;object-fit:contain;border-radius:8px;background:#fff;padding:8px">
+      <div>
+        <div style="font-weight:700">Khalk Tee — Ulaan</div>
+        <div class="muted">₮45,000</div>
       </div>
     </div>
-  </footer>
+  </aside>
+</section>
 
-  <div id="drawer" class="drawer" aria-hidden="true">
-    <div class="backdrop" id="closeCart"></div>
-    <aside class="panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
-      <header>
-        <h3 id="cartTitle">Таны сагс</h3>
-        <button id="closeCartBtn" class="icon-btn">✕</button>
-      </header>
-      <div id="cart" class="cart-items
+<section id="products" class="container">
+  <h3 style="color:var(--red);margin-bottom:12px">Бараа</h3>
+  <div class="grid" id="productGrid">
+    <!-- JS will inject product cards -->
+  </div>
+</section>
+
+<section id="about" class="container" style="margin-top:28px">
+  <h3>Тухай</h3>
+  <p class="muted">Бид Ulaan болон Har өнгийн minimal стильтэй бүтээгдэхүүн үйлдвэрлэдэг. Та захиалга өгөх, карт эсвэл бэлэн төлбөрөөр төлөх боломжтой.</p>
+</section>
+
+  </main>  <div class="cart-drawer" id="cartDrawer" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center"><strong>Сагс</strong><button id="closeCart" class="btn" style="background:transparent;color:#fff">✖</button></div>
+    <div class="cart-list" id="cartList" style="margin-top:8px"></div>
+    <div class="cart-total" id="cartTotal">Нийт: ₮0</div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button id="checkout" class="btn btn-primary">Төлөх</button>
+      <button id="clearCart" class="btn" style="background:#333;color:#fff">Цэвэрлэх</button>
+    </div>
+  </div>  <footer>
+    © "Khalk Shop" — Бүх эрх хуулиар хамгаалагдсан.
+  </footer>  <script>
+    // Sample product data (you can replace with backend later)
+    const products = [
+      {id:1,title:'Khalk Tee — Ulaan',price:45000,img:'assets/khalk.png',desc:'100% cotton, minimal print'},
+      {id:2,title:'Khalk Hoodie — Har',price:85000,img:'assets/khalk.png',desc:'Cozy, fleece lined'},
+      {id:3,title:'Khalk Cap — Ulaan',price:25000,img:'assets/khalk.png',desc:'Adjustable snapback'},
+      {id:4,title:'Khalk Tote — Har',price:22000,img:'assets/khalk.png',desc:'Reusable shopping tote'},
+      {id:5,title:'Khalk Socks — Ulaan',price:8000,img:'assets/khalk.png',desc:'Soft ankle socks'},
+      {id:6,title:'Khalk Jacket — Har',price:125000,img:'assets/khalk.png',desc:'Windproof light jacket'}
+    ];
+
+    const cart = {};
+
+    function formatMoney(n){return '₮' + n.toLocaleString('en-US')}
+
+    const grid = document.getElementById('productGrid');
+    function renderProducts(list){
+      grid.innerHTML = '';
+      list.forEach(p=>{
+        const card = document.createElement('article');card.className='card';
+        card.innerHTML = `
+          <div class="thumb"><img src="${p.img}" alt="${p.title}"></div>
+          <div class="body">
+            <div class="title">${p.title}</div>
+            <div class="muted">${p.desc}</div>
+            <div class="price">${formatMoney(p.price)}</div>
+            <div class="actions">
+              <button class="btn btn-primary" data-id="${p.id}">Сагсанд хийх</button>
+              <button class="btn btn-ghost" data-id="${p.id}" onclick="viewQuick(${p.id})">Шинж</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function addToCart(id){
+      const p = products.find(x=>x.id===id); if(!p) return;
+      if(!cart[id]) cart[id]={...p,qty:0};
+      cart[id].qty++;
+      updateCartUI();
+    }
+
+    function updateCartUI(){
+      const list = document.getElementById('cartList');
+      list.innerHTML='';
+      let total=0, count=0;
+      Object.values(cart).forEach(item=>{
+        total += item.price*item.qty; count += item.qty;
+        const el = document.createElement('div'); el.className='cart-item';
+        el.innerHTML = `<img src="${item.img}" alt=""><div style=\"flex:1\">${item.title}<div class=\"muted\">${formatMoney(item.price)} x ${item.qty}</div></div>
+          <div style=\"display:flex;flex-direction:column;gap:6px\"><button class=\"btn\" onclick=\"changeQty(${item.id},1)\">＋</button><button class=\"btn\" onclick=\"changeQty(${item.id},-1)\">－</button></div>`;
+        list.appendChild(el);
+      });
+      document.getElementById('cartTotal').textContent = 'Нийт: ' + formatMoney(total);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    function changeQty(id,delta){
+      if(!cart[id]) return;
+      cart[id].qty += delta;
+      if(cart[id].qty<=0) delete cart[id];
+      updateCartUI();
+    }
+
+    function viewQuick(id){
+      const p = products.find(x=>x.id===id);
+      alert(p.title + '\n' + p.desc + '\n' + formatMoney(p.price));
+    }
+
+    // Wire up events
+    document.addEventListener('click',e=>{
+      if(e.target.matches('.btn-primary') && e.target.dataset.id){
+        addToCart(Number(e.target.dataset.id));
+      }
+    });
+
+    // Search
+    document.getElementById('search').addEventListener('input',e=>{
+      const q = e.target.value.toLowerCase();
+      renderProducts(products.filter(p=>p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)));
+    });
+
+    // Cart drawer toggle
+    const cartDrawer = document.getElementById('cartDrawer');
+    document.getElementById('cartToggle').addEventListener('click',()=>{cartDrawer.style.display = cartDrawer.style.display==='none' ? 'block' : 'none'});
+    document.getElementById('closeCart').addEventListener('click',()=>{cartDrawer.style.display='none'});
+    document.getElementById('clearCart').addEventListener('click',()=>{for(let k in cart) delete cart[k]; updateCartUI();});
+
+    document.getElementById('checkout').addEventListener('click',()=>{
+      const items = Object.values(cart);
+      if(items.length===0){alert('Таны сагс хоосон');return}
+      let summary = items.map(i=>`${i.title} x ${i.qty} = ${formatMoney(i.price*i.qty)}`).join('\n');
+      summary += '\n\n' + document.getElementById('cartTotal').textContent;
+      // NOTE: Replace with real checkout integration later
+      alert('Төлбөр хийх (тест):\n\n' + summary + '\n\nБанк шилжүүлэг эсвэл кассаар төлөх тохируулна.');
+    });
+
+    // Initial render
+    renderProducts(products);
+    updateCartUI();
+  </script></body>
+</html>
