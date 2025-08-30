@@ -21,6 +21,17 @@ header img:hover{transform: scale(1.2);}
 .card button:hover{background:#ff1744;transform: scale(1.05);}
 .switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
 .switch:hover{text-decoration:underline;}
+
+.shop-container{padding:40px;color:#fff;display:none;}
+.shop-title{text-align:center;font-size:2em;margin-bottom:30px;}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+.product-card{background:#1e1e1e;padding:20px;border-radius:12px;text-align:center;transition: transform 0.3s, box-shadow 0.3s;}
+.product-card:hover{transform: translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.5);}
+.product-card img{width:100%;border-radius:10px;margin-bottom:15px;}
+.product-card h3{margin-bottom:10px;}
+.product-card p{margin-bottom:15px;}
+.product-card button{padding:10px 15px;border:none;border-radius:8px;background:#ff5252;color:#fff;font-weight:bold;cursor:pointer;transition:.3s;}
+.product-card button:hover{background:#ff1744;}
 </style>
 </head>
 <body>
@@ -28,7 +39,7 @@ header img:hover{transform: scale(1.2);}
 <img src="assets/khalk.png" alt="Khalk Store Logo">
 </header>
 
-<div class="container">
+<div class="container" id="auth-container">
 <div class="card" id="auth-card">
 <h2 id="auth-title">Нэвтрэх</h2>
 <input type="tel" id="phone" placeholder="Утасны дугаар">
@@ -38,71 +49,86 @@ header img:hover{transform: scale(1.2);}
 </div>
 </div>
 
-<!-- Firebase -->
+<div class="shop-container" id="shop-container">
+<h2 class="shop-title">Бараа</h2>
+<div class="products">
+<div class="product-card">
+<img src="assets/product1.png" alt="Бараа 1">
+<h3>Бараа 1</h3>
+<p>Үнэ: 150,000₮</p>
+<button>Сагсанд нэмэх</button>
+</div>
+<div class="product-card">
+<img src="assets/product2.png" alt="Бараа 2">
+<h3>Бараа 2</h3>
+<p>Үнэ: 200,000₮</p>
+<button>Сагсанд нэмэх</button>
+</div>
+</div>
+</div>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
-    authDomain: "khalkh-store.firebaseapp.com",
-    databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
-    projectId: "khalkh-store",
-    storageBucket: "khalkh-store.firebasestorage.app",
-    messagingSenderId: "205879441792",
-    appId: "1:205879441792:web:677a6abe7912d6436a2965",
-    measurementId: "G-6M9HZM8G9N"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+  authDomain: "khalkh-store.firebaseapp.com",
+  databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+  projectId: "khalkh-store",
+  storageBucket: "khalkh-store.firebasestorage.app",
+  messagingSenderId: "205879441792",
+  appId: "1:205879441792:web:677a6abe7912d6436a2965",
+  measurementId: "G-6M9HZM8G9N"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
-  // Auth logic
-  const authTitle = document.getElementById('auth-title');
-  const authButton = document.getElementById('auth-button');
-  const switchAuth = document.getElementById('switch-auth');
-  let isLogin = true;
+const authTitle = document.getElementById('auth-title');
+const authButton = document.getElementById('auth-button');
+const switchAuth = document.getElementById('switch-auth');
+let isLogin = true;
 
-  switchAuth.addEventListener('click', () => {
-    isLogin = !isLogin;
-    if (isLogin) {
-      authTitle.textContent = 'Нэвтрэх';
-      authButton.textContent = 'Нэвтрэх';
-      switchAuth.textContent = 'Бүртгүүлэх бол энд дарна уу';
-    } else {
-      authTitle.textContent = 'Бүртгүүлэх';
-      authButton.textContent = 'Бүртгүүлэх';
-      switchAuth.textContent = 'Нэвтрэх бол энд дарна уу';
-    }
-  });
+switchAuth.addEventListener('click', () => {
+  isLogin = !isLogin;
+  if (isLogin) {
+    authTitle.textContent = 'Нэвтрэх';
+    authButton.textContent = 'Нэвтрэх';
+    switchAuth.textContent = 'Бүртгүүлэх бол энд дарна уу';
+  } else {
+    authTitle.textContent = 'Бүртгүүлэх';
+    authButton.textContent = 'Бүртгүүлэх';
+    switchAuth.textContent = 'Нэвтрэх бол энд дарна уу';
+  }
+});
 
-  authButton.addEventListener('click', () => {
-    const phone = document.getElementById('phone').value;
-    const password = document.getElementById('password').value;
-    if(phone === '' || password === '') { alert('Бүх талбарыг бөглөнө үү!'); return; }
+authButton.addEventListener('click', () => {
+  const phone = document.getElementById('phone').value;
+  const password = document.getElementById('password').value;
+  if(phone === '' || password === '') { alert('Бүх талбарыг бөглөнө үү!'); return; }
 
-    const userRef = ref(database, 'users/' + phone);
+  const userRef = ref(database, 'users/' + phone);
 
-    if(isLogin){
-      // Нэвтрэх
-      get(userRef).then((snapshot) => {
-        if(snapshot.exists()){
-          if(snapshot.val().password === password){
-            alert(`Амжилттай нэвтэрлээ: ${phone}`);
-            // Хэрэглэгч өөрийн өгөгдлийг update хийх боломжтой
-          } else { alert('Нууц үг буруу!'); }
-        } else { alert('Энэ дугаараар бүртгэл олдсонгүй!'); }
-      });
-    } else {
-      // Бүртгүүлэх
-      set(userRef, { password: password })
-      .then(() => { alert(`Амжилттай бүртгүүллээ: ${phone}`); })
-      .catch(() => { alert('Алдаа гарлаа!'); });
-    }
+  if(isLogin){
+    get(userRef).then((snapshot) => {
+      if(snapshot.exists()){
+        if(snapshot.val().password === password){
+          alert(`Амжилттай нэвтэрлээ: ${phone}`);
+          document.getElementById('auth-container').style.display = 'none';
+          document.getElementById('shop-container').style.display = 'block';
+        } else { alert('Нууц үг буруу!'); }
+      } else { alert('Энэ дугаараар бүртгэл олдсонгүй!'); }
+    });
+  } else {
+    set(userRef, { password: password })
+    .then(() => { alert(`Амжилттай бүртгүүллээ: ${phone}`); })
+    .catch(() => { alert('Алдаа гарлаа!'); });
+  }
 
-    document.getElementById('phone').value = '';
-    document.getElementById('password').value = '';
-  });
+  document.getElementById('phone').value = '';
+  document.getElementById('password').value = '';
+});
 </script>
 </body>
 </html>
