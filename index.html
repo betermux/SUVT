@@ -22,6 +22,7 @@ header{
     transition: all 0.8s ease;
     cursor:pointer;
     flex-shrink: 0; /* Prevent logo from shrinking */
+    opacity: 0; /* Make logo invisible initially */
 }
 #user-phone{
     font-size:0.9em; /* Жижиг текст */
@@ -61,6 +62,7 @@ body.shop-active header {
 }
 body.shop-active #logo {
     width: 50px; /* Shrink logo */
+    opacity: 1; /* Make logo visible */
 }
 body.shop-active #user-phone {
     opacity: 1; /* Show user phone */
@@ -84,7 +86,7 @@ body.shop-active #cart-icon {
 
 /* Shop */
 .shop-container{padding:40px;color:#fff;display:none;}
-.shop-title{text-align:center;font-size:2em;margin-bottom:30px;} /* This is the element to change */
+.shop-title{text-align:center;font-size:2em;margin-bottom:30px;}
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
 .product-card{
     background:#1e1e1e;
@@ -166,7 +168,6 @@ body.shop-active #cart-icon {
 
 <!-- Shop Container -->
 <div class="shop-container" id="shop-container">
-    <!-- Removed shop-title content -->
     <h2 class="shop-title"></h2>
     <div class="products">
         <div class="product-card">
@@ -299,6 +300,7 @@ authButton.addEventListener('click', async () => {
 
         // Add class to body to trigger shop-active styles
         document.body.classList.add('shop-active');
+        logo.style.opacity = '1'; // Make logo visible on login
 
         // Auth → Shop
         document.getElementById('auth-container').style.display = 'none';
