@@ -8,8 +8,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
 body{background:#121212;color:#fff;}
-header{background:#b71c1c;padding:20px;text-align:center;}
-header h1{font-size:2em;}
+header{padding:20px;text-align:center;}
+header img{width:180px;}
 .container{display:flex;justify-content:center;align-items:center;min-height:80vh;}
 .card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 20px rgba(0,0,0,0.5);}
 .card h2{text-align:center;margin-bottom:30px;}
@@ -19,12 +19,11 @@ header h1{font-size:2em;}
 .card button:hover{background:#ff1744;}
 .switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
 .switch:hover{text-decoration:underline;}
-footer{text-align:center;padding:20px;background:#b71c1c;color:#fff;margin-top:20px;}
 </style>
 </head>
 <body>
 <header>
-<h1>Khalk Store</h1>
+<img src="assets/khalk.png" alt="Khalk Store Logo">
 </header>
 
 <div class="container">
@@ -36,10 +35,6 @@ footer{text-align:center;padding:20px;background:#b71c1c;color:#fff;margin-top:2
 <div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
 </div>
 </div>
-
-<footer>
-&copy; 2025 Khalk Store
-</footer>
 
 <script>
 const authTitle=document.getElementById('auth-title');
