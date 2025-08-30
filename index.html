@@ -7,10 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
-body{background:#121212;color:#fff;overflow-x:hidden;}
-header{padding:30px 20px;text-align:center;}
-header img{width:90px;transition: transform 0.5s;}
-header img:hover{transform: scale(1.2);}
+body{background:#121212;color:#fff;overflow-x:hidden;position:relative;}
+header{padding:30px 20px;text-align:center;position:relative;}
+header img{width:50px;position:absolute;top:20px;left:20px;transition: transform 0.3s;}
+header img:hover{transform: scale(1.1);}
+#user-phone{position:absolute;top:20px;right:20px;font-weight:bold;}
+
 .container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
 .card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 25px rgba(0,0,0,0.5);transform: translateY(-50px);opacity:0;animation: slideDown 0.8s forwards;}
 @keyframes slideDown{to{transform: translateY(0);opacity:1;}}
@@ -37,6 +39,7 @@ header img:hover{transform: scale(1.2);}
 <body>
 <header>
 <img src="assets/khalk.png" alt="Khalk Store Logo">
+<div id="user-phone"></div>
 </header>
 
 <!-- Auth Container -->
@@ -88,13 +91,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Variables
 let currentUserPhone = null;
 
 // Auth logic
 const authTitle = document.getElementById('auth-title');
 const authButton = document.getElementById('auth-button');
 const switchAuth = document.getElementById('switch-auth');
+const userPhoneDiv = document.getElementById('user-phone');
 let isLogin = true;
 
 switchAuth.addEventListener('click', () => {
@@ -124,6 +127,7 @@ authButton.addEventListener('click', () => {
         currentUserPhone = phone;
         document.getElementById('auth-container').style.display = 'none';
         document.getElementById('shop-container').style.display = 'block';
+        userPhoneDiv.textContent = phone; // Баруун дээд талд харуулах
         alert(`Амжилттай нэвтэрлээ: ${phone}`);
       } else {
         alert('Дугаар эсвэл нууц үг буруу!');
