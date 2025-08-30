@@ -8,10 +8,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
 body{background:#121212;color:#fff;overflow-x:hidden;position:relative;}
-header{padding:30px 20px;text-align:center;position:relative;}
-header img{width:50px;position:absolute;top:20px;left:20px;transition: transform 0.3s;}
-header img:hover{transform: scale(1.1);}
-#user-phone{position:absolute;top:20px;right:20px;font-weight:bold;}
+header{padding:30px 20px;text-align:center;position:relative;height:100px;}
+#logo{width:120px;transition: all 0.8s ease;}
+#user-phone{position:absolute;top:20px;opacity:0;transition: opacity 0.8s ease; font-weight:bold; color:#fff;}
 
 .container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
 .card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 25px rgba(0,0,0,0.5);transform: translateY(-50px);opacity:0;animation: slideDown 0.8s forwards;}
@@ -38,7 +37,7 @@ header img:hover{transform: scale(1.1);}
 </head>
 <body>
 <header>
-<img src="assets/khalk.png" alt="Khalk Store Logo">
+<img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
 <div id="user-phone"></div>
 </header>
 
@@ -93,27 +92,23 @@ const database = getDatabase(app);
 
 let currentUserPhone = null;
 
-// Auth logic
+// Elements
 const authTitle = document.getElementById('auth-title');
 const authButton = document.getElementById('auth-button');
 const switchAuth = document.getElementById('switch-auth');
 const userPhoneDiv = document.getElementById('user-phone');
+const logo = document.getElementById('logo');
 let isLogin = true;
 
+// Switch login/register
 switchAuth.addEventListener('click', () => {
   isLogin = !isLogin;
-  if (isLogin) {
-    authTitle.textContent = 'Нэвтрэх';
-    authButton.textContent = 'Нэвтрэх';
-    switchAuth.textContent = 'Бүртгүүлэх бол энд дарна уу';
-  } else {
-    authTitle.textContent = 'Бүртгүүлэх';
-    authButton.textContent = 'Бүртгүүлэх';
-    switchAuth.textContent = 'Нэвтрэх бол энд дарна уу';
-  }
+  authTitle.textContent = isLogin ? 'Нэвтрэх' : 'Бүртгүүлэх';
+  authButton.textContent = isLogin ? 'Нэвтрэх' : 'Бүртгүүлэх';
+  switchAuth.textContent = isLogin ? 'Бүртгүүлэх бол энд дарна уу' : 'Нэвтрэх бол энд дарна уу';
 });
 
-// Login / Register
+// Login/Register
 authButton.addEventListener('click', () => {
   const phone = document.getElementById('phone').value;
   const password = document.getElementById('password').value;
@@ -125,9 +120,21 @@ authButton.addEventListener('click', () => {
     get(userRef).then(snapshot => {
       if(snapshot.exists() && snapshot.val().password === password){
         currentUserPhone = phone;
+
+        // Animation: логог жижигрүүлэх, зүүн дээд буланд шилжүүлэх
+        logo.style.width = '50px';
+        logo.style.position = 'absolute';
+        logo.style.top = '20px';
+        logo.style.left = '20px';
+        logo.style.transition = 'all 0.8s ease';
+
+        // Нэвтэрсэн дугаарыг харуулах fade-in
+        userPhoneDiv.textContent = phone;
+        userPhoneDiv.style.opacity = '1';
+
+        // Auth → Shop
         document.getElementById('auth-container').style.display = 'none';
         document.getElementById('shop-container').style.display = 'block';
-        userPhoneDiv.textContent = phone; // Баруун дээд талд харуулах
         alert(`Амжилттай нэвтэрлээ: ${phone}`);
       } else {
         alert('Дугаар эсвэл нууц үг буруу!');
@@ -143,7 +150,7 @@ authButton.addEventListener('click', () => {
   document.getElementById('password').value = '';
 });
 
-// Add to cart logic
+// Add to cart
 document.querySelectorAll('.product-card button').forEach((btn)=>{
   btn.addEventListener('click', ()=>{
     if(!currentUserPhone){ alert('Нэвтэрсэн байх шаардлагатай!'); return; }
