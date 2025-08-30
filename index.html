@@ -14,7 +14,7 @@ header{
     position:relative;
     height:100px;
     display: flex; /* Use flexbox for better alignment */
-    justify-content: space-between; /* Space out logo, user-phone, and cart */
+    justify-content: center; /* Default to center for auth screen */
     align-items: center; /* Vertically align items */
 }
 #logo{
@@ -24,7 +24,6 @@ header{
     flex-shrink: 0; /* Prevent logo from shrinking */
 }
 #user-phone{
-    /* Removed absolute positioning */
     font-size:0.9em; /* Жижиг текст */
     opacity:0; /* Still hidden initially */
     transition: opacity 0.8s ease;
@@ -44,18 +43,30 @@ header{
     cursor: pointer;
     color: #fff;
     font-weight: bold;
-    padding: 10px;
+    padding: 8px 12px; /* Slightly reduced padding for emoji only */
     border-radius: 8px;
     background: #ff5252; /* Match button style */
     transition: background 0.3s;
     display: none; /* Hidden until logged in */
     flex-shrink: 0; /* Prevent cart icon from shrinking */
     margin-left: 20px; /* Add some space from user-phone */
-    /* Adjust padding if emoji only looks too big */
-    padding: 8px 12px; /* Slightly reduced padding for emoji only */
 }
 #cart-icon:hover {
     background: #ff1744;
+}
+
+/* Style for header when shop is active (after login) */
+body.shop-active header {
+    justify-content: space-between; /* Space out logo, user-phone, and cart */
+}
+body.shop-active #logo {
+    width: 50px; /* Shrink logo */
+}
+body.shop-active #user-phone {
+    opacity: 1; /* Show user phone */
+}
+body.shop-active #cart-icon {
+    display: block; /* Show cart icon */
 }
 
 
@@ -139,7 +150,6 @@ header{
 <header>
     <img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
     <div id="user-phone"></div>
-    <!-- Changed cart-icon content -->
     <div id="cart-icon">🛒 <span id="cart-count">0</span></div>
 </header>
 
@@ -156,8 +166,8 @@ header{
 
 <!-- Shop Container -->
 <div class="shop-container" id="shop-container">
-    <!-- Changed shop-title content -->
-    <h2 class="shop-title">Бараанууд</h2>
+    <!-- Removed shop-title content -->
+    <h2 class="shop-title"></h2>
     <div class="products">
         <div class="product-card">
             <img src="assets/product1.png" alt="Бараа 1">
@@ -227,6 +237,7 @@ const cartItemsDiv = document.getElementById('cart-items');
 const cartTotalDiv = document.getElementById('cart-total'); // New element for total
 const cartIcon = document.getElementById('cart-icon'); // New cart icon
 const cartCountSpan = document.getElementById('cart-count'); // New cart count span
+const shopContainer = document.getElementById('shop-container'); // Get shop container
 
 let isLogin = true;
 
@@ -286,19 +297,12 @@ authButton.addEventListener('click', async () => {
       if(snapshot.exists() && snapshot.val().password === password){
         currentUserPhone = phone;
 
-        // Adjust logo and show user phone
-        // Logo animation is now handled by CSS transition on width
-        logo.style.width = '50px';
-        // userPhoneDiv is now part of flex, so no absolute positioning needed
-        userPhoneDiv.style.opacity = '1';
-        userPhoneDiv.textContent = phone; // Set text content
-
-        // Show cart icon
-        cartIcon.style.display = 'block';
+        // Add class to body to trigger shop-active styles
+        document.body.classList.add('shop-active');
 
         // Auth → Shop
         document.getElementById('auth-container').style.display = 'none';
-        document.getElementById('shop-container').style.display = 'block';
+        shopContainer.style.display = 'block';
         alert(`Амжилттай нэвтэрлээ: ${phone}`);
 
         // Load user's cart immediately after login
