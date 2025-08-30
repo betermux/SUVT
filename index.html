@@ -8,10 +8,22 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
 body{background:#121212;color:#fff;overflow-x:hidden;position:relative;}
-header{padding:30px 20px;text-align:center;position:relative;height:100px;}
-#logo{width:120px;transition: all 0.8s ease;cursor:pointer;}
+header{
+    padding:30px 20px;
+    text-align:center;
+    position:relative;
+    height:100px;
+    display: flex; /* Use flexbox for better alignment */
+    justify-content: space-between; /* Space out logo and cart */
+    align-items: center; /* Vertically align items */
+}
+#logo{
+    width:120px;
+    transition: all 0.8s ease;
+    cursor:pointer;
+}
 #user-phone{
-    position:absolute;
+    position:absolute; /* Keep absolute for initial login animation */
     top:20px;
     left:calc(20px + 50px + 2px); /* Логоны зүүн + логогийн өргөн + 2px зай */
     font-size:0.9em; /* Жижиг текст */
@@ -20,6 +32,23 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
     font-weight:bold;
     color:#fff;
 }
+
+/* New Cart Icon/Button */
+#cart-icon {
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    background: #ff5252; /* Match button style */
+    transition: background 0.3s;
+    display: none; /* Hidden until logged in */
+}
+#cart-icon:hover {
+    background: #ff1744;
+}
+
 
 /* Auth */
 .container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
@@ -45,12 +74,12 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
 .product-card button{padding:10px 15px;border:none;border-radius:8px;background:#ff5252;color:#fff;font-weight:bold;cursor:pointer;transition:.3s;}
 .product-card button:hover{background:#ff1744;}
 
-/* Cart popup */
+/* Cart popup - Adjusted Positioning */
 #cart-popup{
     display:none;
     position:absolute;
-    top:70px;
-    left:20px;
+    top: 70px; /* Aligned with header height */
+    right: 20px; /* Positioned to the right */
     width:300px;
     background:#1e1e1e;
     padding:20px;
@@ -60,48 +89,69 @@ header{padding:30px 20px;text-align:center;position:relative;height:100px;}
     z-index:100;
 }
 #cart-items div{margin-bottom:8px;}
+#cart-total {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+    font-weight: bold;
+}
 </style>
 </head>
 <body>
 <header>
-<img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
-<div id="user-phone"></div>
+    <img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
+    <div id="user-phone"></div>
+    <div id="cart-icon">🛒 Сагс (<span id="cart-count">0</span>)</div>
 </header>
 
 <!-- Auth Container -->
 <div class="container" id="auth-container">
-<div class="card" id="auth-card">
-<h2 id="auth-title">Нэвтрэх</h2>
-<input type="tel" id="phone" placeholder="Утасны дугаар">
-<input type="password" id="password" placeholder="Нууц үг">
-<button id="auth-button">Нэвтрэх</button>
-<div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
-</div>
+    <div class="card" id="auth-card">
+        <h2 id="auth-title">Нэвтрэх</h2>
+        <input type="tel" id="phone" placeholder="Утасны дугаар">
+        <input type="password" id="password" placeholder="Нууц үг">
+        <button id="auth-button">Нэвтрэх</button>
+        <div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
+    </div>
 </div>
 
 <!-- Shop Container -->
 <div class="shop-container" id="shop-container">
-<h2 class="shop-title">Бараа</h2>
-<div class="products">
-<div class="product-card">
-<img src="assets/product1.png" alt="Бараа 1">
-<h3>Бараа 1</h3>
-<p>Үнэ: 150,000₮</p>
-<button>Сагсанд нэмэх</button>
-</div>
-<div class="product-card">
-<img src="assets/product2.png" alt="Бараа 2">
-<h3>Бараа 2</h3>
-<p>Үнэ: 200,000₮</p>
-<button>Сагсанд нэмэх</button>
-</div>
-</div>
+    <h2 class="shop-title">Бараа</h2>
+    <div class="products">
+        <div class="product-card">
+            <img src="assets/product1.png" alt="Бараа 1">
+            <h3>Бараа 1</h3>
+            <p data-price="150000">Үнэ: 150,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+        <div class="product-card">
+            <img src="assets/product2.png" alt="Бараа 2">
+            <h3>Бараа 2</h3>
+            <p data-price="200000">Үнэ: 200,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+        <!-- Add more product cards as needed -->
+        <div class="product-card">
+            <img src="assets/product3.png" alt="Бараа 3">
+            <h3>Бараа 3</h3>
+            <p data-price="50000">Үнэ: 50,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+        <div class="product-card">
+            <img src="assets/product4.png" alt="Бараа 4">
+            <h3>Бараа 4</h3>
+            <p data-price="120000">Үнэ: 120,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+    </div>
 </div>
 
 <!-- Cart Popup -->
 <div id="cart-popup">
-  <h3>Сагс</h3>
-  <div id="cart-items"></div>
+    <h3>Сагс</h3>
+    <div id="cart-items"></div>
+    <div id="cart-total">Нийт: 0₮</div>
 </div>
 
 <script type="module">
@@ -124,6 +174,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 let currentUserPhone = null;
+let userCart = []; // Local cache for the user's cart
 
 // Elements
 const authTitle = document.getElementById('auth-title');
@@ -133,7 +184,45 @@ const userPhoneDiv = document.getElementById('user-phone');
 const logo = document.getElementById('logo');
 const cartPopup = document.getElementById('cart-popup');
 const cartItemsDiv = document.getElementById('cart-items');
+const cartTotalDiv = document.getElementById('cart-total'); // New element for total
+const cartIcon = document.getElementById('cart-icon'); // New cart icon
+const cartCountSpan = document.getElementById('cart-count'); // New cart count span
+
 let isLogin = true;
+
+// --- Functions ---
+
+// Function to update cart display
+function updateCartDisplay() {
+    cartItemsDiv.innerHTML = '';
+    let total = 0;
+    if (userCart.length > 0) {
+        userCart.forEach(item => {
+            const div = document.createElement('div');
+            div.textContent = `${item.name} - ${item.price.toLocaleString()}₮`; // Format price
+            cartItemsDiv.appendChild(div);
+            total += item.rawPrice; // Use raw price for calculation
+        });
+    } else {
+        cartItemsDiv.textContent = 'Сагс хоосон байна';
+    }
+    cartTotalDiv.textContent = `Нийт: ${total.toLocaleString()}₮`;
+    cartCountSpan.textContent = userCart.length; // Update cart count
+}
+
+// Function to load cart from Firebase
+async function loadCartFromFirebase(phone) {
+    const cartRef = ref(database, 'users/' + phone + '/cart');
+    const snapshot = await get(cartRef);
+    if (snapshot.exists()) {
+        userCart = snapshot.val();
+    } else {
+        userCart = [];
+    }
+    updateCartDisplay(); // Update UI after loading cart
+}
+
+// --- Event Listeners ---
 
 // Switch login/register
 switchAuth.addEventListener('click', () => {
@@ -144,7 +233,7 @@ switchAuth.addEventListener('click', () => {
 });
 
 // Login/Register
-authButton.addEventListener('click', () => {
+authButton.addEventListener('click', async () => {
   const phone = document.getElementById('phone').value;
   const password = document.getElementById('password').value;
   if(phone === '' || password === '') { alert('Бүх талбарыг бөглөнө үү!'); return; }
@@ -152,34 +241,48 @@ authButton.addEventListener('click', () => {
   const userRef = ref(database, 'users/' + phone);
 
   if(isLogin){
-    get(userRef).then(snapshot => {
+    try {
+      const snapshot = await get(userRef);
       if(snapshot.exists() && snapshot.val().password === password){
         currentUserPhone = phone;
 
-        // Лого жижигрүүлэх
+        // Adjust logo and show user phone
         logo.style.width = '50px';
         logo.style.position = 'absolute';
         logo.style.top = '20px';
         logo.style.left = '20px';
         logo.style.transition = 'all 0.8s ease';
 
-        // Дугаар харуулах
         userPhoneDiv.textContent = phone;
         userPhoneDiv.style.opacity = '1';
         userPhoneDiv.style.left = '72px'; // 20px + 50px + 2px
+
+        // Show cart icon
+        cartIcon.style.display = 'block';
 
         // Auth → Shop
         document.getElementById('auth-container').style.display = 'none';
         document.getElementById('shop-container').style.display = 'block';
         alert(`Амжилттай нэвтэрлээ: ${phone}`);
+
+        // Load user's cart immediately after login
+        await loadCartFromFirebase(currentUserPhone);
+
       } else {
         alert('Дугаар эсвэл нууц үг буруу!');
       }
-    });
+    } catch (error) {
+        console.error("Login error:", error);
+        alert('Нэвтрэхэд алдаа гарлаа!');
+    }
   } else {
-    set(userRef, { password: password })
-    .then(() => { alert(`Амжилттай бүртгүүллээ: ${phone}`); })
-    .catch(() => { alert('Алдаа гарлаа!'); });
+    try {
+      await set(userRef, { password: password });
+      alert(`Амжилттай бүртгүүллээ: ${phone}`);
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert('Бүртгүүлэхэд алдаа гарлаа!');
+    }
   }
 
   document.getElementById('phone').value = '';
@@ -188,39 +291,58 @@ authButton.addEventListener('click', () => {
 
 // Add to cart
 document.querySelectorAll('.product-card button').forEach((btn)=>{
-  btn.addEventListener('click', ()=>{
+  btn.addEventListener('click', async ()=>{
     if(!currentUserPhone){ alert('Нэвтэрсэн байх шаардлагатай!'); return; }
-    const productName = btn.parentElement.querySelector('h3').innerText;
-    const productPrice = btn.parentElement.querySelector('p').innerText;
+
+    const productCard = btn.parentElement;
+    const productName = productCard.querySelector('h3').innerText;
+    const productPriceText = productCard.querySelector('p').innerText; // e.g., "Үнэ: 150,000₮"
+    const rawPrice = parseInt(productCard.querySelector('p').dataset.price); // Get raw number from data-price
+
+    const cartItem = {
+        name: productName,
+        price: productPriceText.replace('Үнэ: ', ''), // Store formatted price for display
+        rawPrice: rawPrice // Store raw price for calculations
+    };
+
+    userCart.push(cartItem); // Add to local cache
+    updateCartDisplay(); // Update UI immediately
 
     const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
-    get(cartRef).then(snapshot => {
-      let cart = snapshot.exists() ? snapshot.val() : [];
-      cart.push({ name: productName, price: productPrice });
-      set(cartRef, cart).then(()=> alert(`${productName} сагсанд нэмэгдлээ!`));
-    });
-  });
-});
-
-// Logo click → cart popup
-logo.addEventListener('click', ()=>{
-  if(!currentUserPhone) return;
-  cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
-
-  const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
-  get(cartRef).then(snapshot => {
-    cartItemsDiv.innerHTML = '';
-    if(snapshot.exists()){
-      snapshot.val().forEach(item=>{
-        const div = document.createElement('div');
-        div.textContent = `${item.name} - ${item.price}`;
-        cartItemsDiv.appendChild(div);
-      });
-    } else {
-      cartItemsDiv.textContent = 'Сагс хоосон байна';
+    try {
+        await set(cartRef, userCart); // Save the entire updated cart array
+        alert(`${productName} сагсанд нэмэгдлээ!`);
+    } catch (error) {
+        console.error("Error adding to cart:", error);
+        alert('Сагсанд нэмэхэд алдаа гарлаа!');
     }
   });
 });
+
+// Cart icon click → toggle cart popup
+cartIcon.addEventListener('click', ()=>{
+  if(!currentUserPhone) return; // Should not happen if icon is hidden when not logged in
+  cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
+  // No need to load from Firebase here, as userCart is kept in sync
+});
+
+// Optional: Close cart popup if clicked outside
+document.addEventListener('click', (event) => {
+    if (cartPopup.style.display === 'block' &&
+        !cartPopup.contains(event.target) &&
+        !cartIcon.contains(event.target) &&
+        event.target !== logo) { // Exclude logo if it still has some cart-related function
+        cartPopup.style.display = 'none';
+    }
+});
+
+// Logo click behavior (reverted to original, no cart function)
+logo.addEventListener('click', () => {
+    // You can add a different behavior for the logo here, or remove this listener if not needed.
+    // For now, it just prevents the cart from opening if clicked.
+    // If you want the logo to navigate to home, you'd add: window.location.href = '/';
+});
+
 </script>
 </body>
 </html>
