@@ -1,205 +1,130 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khalk Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<style>
-body {
-  margin:0;
-  font-family:'Roboto',sans-serif;
-  background:#121212;
-  color:#fff;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khalk Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module">
+    // Firebase импорт
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-header {
-  background: none; /* Улаан box-ыг хасав */
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border-bottom:1px solid #333;
-}
-header img { height:40px; }
-header h1 { font-size:1.4rem; margin:0; font-weight:700; color:#fff; }
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
+      authDomain: "khalkh-store.firebaseapp.com",
+      databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
+      projectId: "khalkh-store",
+      storageBucket: "khalkh-store.firebasestorage.app",
+      messagingSenderId: "205879441792",
+      appId: "1:205879441792:web:677a6abe7912d6436a2965",
+      measurementId: "G-6M9HZM8G9N"
+    };
 
-.products {
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:15px;
-}
-.product {
-  background:#1e1e1e;
-  padding:12px;
-  border-radius:12px;
-  text-align:center;
-  transition:transform 0.15s ease;
-}
-.product:hover{ transform:scale(1.02); }
-.product img{ width:100%; max-width:200px; border-radius:10px; }
-.btn{
-  background:#d32f2f; color:#fff;
-  padding:8px 16px; border:none; border-radius:6px;
-  cursor:pointer; font-size:0.9rem; transition:background 0.2s;
-}
-.btn:hover{ background:#b71c1c; }
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-@media(min-width:600px){
-  .products{ flex-direction:row; flex-wrap:wrap; justify-content:center; }
-  .product{ width:180px; }
-}
+    let selectedItem = null;
 
-/* Overlay & Panel */
-#overlay{
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.5); opacity:0; pointer-events:none;
-  transition:opacity 0.3s ease; z-index:999;
-}
-#overlay.show{ opacity:1; pointer-events:all; }
+    function showOrderPanel(itemName) {
+      selectedItem = itemName;
+      document.getElementById("order-panel").classList.remove("translate-x-full");
+    }
 
-#order-panel{
-  position:fixed; top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  background:#1e1e1e;
-  padding:25px 30px;
-  border-radius:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.7);
-  z-index:1000;
-  transition:transform 0.3s ease, opacity 0.3s;
-  width:90%; max-width:320px;
-}
-#order-panel.show{ transform:translate(-50%,-50%) scale(1); }
+    function closeOrderPanel() {
+      document.getElementById("order-panel").classList.add("translate-x-full");
+    }
 
-#order-panel h3{
-  margin-top:0; margin-bottom:15px;
-  text-align:center; font-size:1.2rem; font-weight:700;
-  color:#fff;
-}
+    function saveOrder(customerName, phone, address, item) {
+      const orderRef = ref(db, 'orders');
+      push(orderRef, {
+        customerName: customerName,
+        phone: phone,
+        address: address,
+        item: item,
+        timestamp: Date.now()
+      })
+      .then(() => {
+        alert("Захиалга амжилттай илгээгдлээ ✅");
+        closeOrderPanel();
+      })
+      .catch(err => {
+        console.error("Firebase push алдаа:", err);
+        alert("Алдаа гарлаа, дахин оролдоно уу ❌");
+      });
+    }
 
-#order-panel input{
-  width:100%; padding:10px 12px; margin-bottom:12px;
-  border-radius:8px; border:1px solid #333;
-  background:#2a2a2a; color:#fff; font-size:0.95rem;
-}
+    window.showOrderPanel = showOrderPanel;
+    window.closeOrderPanel = closeOrderPanel;
 
-#order-panel .submit-btn{
-  width:100%; padding:12px; border:none; border-radius:8px;
-  background:#d32f2f; color:#fff; font-size:1rem; cursor:pointer;
-  transition:background 0.2s;
-}
-#order-panel .submit-btn:hover{ background:#b71c1c; }
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("orderForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = document.getElementById("customerName").value;
+        const phone = document.getElementById("phone").value;
+        const address = document.getElementById("address").value;
 
-#panel-message{
-  position:fixed; top:15px; left:50%;
-  transform:translateX(-50%) translateY(-120%);
-  background-color:#00a600; color:#fff;
-  padding:12px 20px; border-radius:8px;
-  opacity:0; transition: transform 0.3s, opacity 0.3s;
-  z-index:1001;
-  font-weight:500;
-}
-#panel-message.show{ transform:translateX(-50%) translateY(0); opacity:1; }
+        if (!name || !phone || !address) {
+          alert("Бүх талбарыг бөглөнө үү ⚠️");
+          return;
+        }
 
-</style>
+        saveOrder(name, phone, address, selectedItem);
+      });
+    });
+  </script>
 </head>
-<body>
+<body class="bg-black text-white font-sans">
 
-<header>
-  <img src="assets/khalk.png" alt="Khalk Logo">
-  <h1>Khalk Store</h1>
-</header>
+  <!-- Header -->
+  <header class="flex items-center p-4 border-b border-gray-800">
+    <img src="assets/khalk.png" alt="Khalk Store" class="h-10 mr-3">
+    <h1 class="text-xl font-bold">Khalk Store</h1>
+  </header>
 
-<div class="products" id="products"></div>
+  <!-- Products -->
+  <main class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div class="bg-gray-900 p-4 rounded-2xl shadow hover:scale-105 transition-transform">
+      <h2 class="text-lg font-semibold mb-2">Бараа 1</h2>
+      <p class="text-gray-400 mb-3">Энгийн тайлбар</p>
+      <button onclick="showOrderPanel('Бараа 1')" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg">
+        Захиалах
+      </button>
+    </div>
 
-<div id="overlay"></div>
+    <div class="bg-gray-900 p-4 rounded-2xl shadow hover:scale-105 transition-transform">
+      <h2 class="text-lg font-semibold mb-2">Бараа 2</h2>
+      <p class="text-gray-400 mb-3">Энгийн тайлбар</p>
+      <button onclick="showOrderPanel('Бараа 2')" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg">
+        Захиалах
+      </button>
+    </div>
+  </main>
 
-<div id="order-panel">
-  <h3>Захиалга</h3>
-  <input type="text" id="customer-name" placeholder="Нэр">
-  <input type="text" id="customer-phone" placeholder="Утас">
-  <button class="submit-btn" id="submit-order">Захиалах</button>
-</div>
+  <!-- Order Panel -->
+  <div id="order-panel"
+    class="fixed top-0 right-0 w-80 h-full bg-gray-900 text-white p-6 transform translate-x-full transition-transform duration-500 ease-in-out shadow-2xl z-50 rounded-l-2xl">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold">Захиалга хийх</h2>
+      <button onclick="closeOrderPanel()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+    </div>
 
-<div id="panel-message"></div>
+    <form id="orderForm" class="space-y-4">
+      <input id="customerName" type="text" placeholder="Таны нэр"
+        class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+      <input id="phone" type="text" placeholder="Утас"
+        class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
 
-const firebaseConfig = {
-  apiKey:"AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
-  authDomain:"khalkh-store.firebaseapp.com",
-  databaseURL:"https://khalkh-store-default-rtdb.firebaseio.com",
-  projectId:"khalkh-store",
-  storageBucket:"khalkh-store.appspot.com",
-  messagingSenderId:"205879441792",
-  appId:"1:205879441792:web:677a6abe7912d6436a2965"
-};
+      <textarea id="address" placeholder="Хаяг дэлгэрэнгүй"
+        class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 h-24 resize-none"></textarea>
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const productsData=[
-  {id:1,name:"Бараа 1",price:10000,img:"https://via.placeholder.com/200x200?text=Product+1"},
-  {id:2,name:"Бараа 2",price:15000,img:"https://via.placeholder.com/200x200?text=Product+2"},
-  {id:3,name:"Бараа 3",price:20000,img:"https://via.placeholder.com/200x200?text=Product+3"}
-];
-
-const productsDiv=document.getElementById('products');
-const orderPanel=document.getElementById('order-panel');
-const overlay=document.getElementById('overlay');
-const panelMessage=document.getElementById('panel-message');
-
-let selectedProduct=null;
-
-function renderProducts(){
-  productsDiv.innerHTML='';
-  productsData.forEach(p=>{
-    const div=document.createElement('div');
-    div.className='product';
-    div.innerHTML=`
-      <img src="${p.img}" alt="${p.name}">
-      <h4>${p.name}</h4>
-      <p>${p.price}₮</p>
-      <button class="btn" onclick="openOrderPanel(${p.id})">Захиалах</button>
-    `;
-    productsDiv.appendChild(div);
-  });
-}
-
-window.openOrderPanel=function(id){
-  selectedProduct=productsData.find(p=>p.id===id);
-  overlay.classList.add('show');
-  orderPanel.classList.add('show');
-}
-
-overlay.addEventListener('click',()=>{overlay.classList.remove('show');orderPanel.classList.remove('show');});
-
-document.getElementById('submit-order').addEventListener('click',()=>{
-  const name=document.getElementById('customer-name').value.trim();
-  const phone=document.getElementById('customer-phone').value.trim();
-  if(!name||!phone){ showPanel("Мэдээлэл дутуу байна",false); return; }
-
-  push(ref(db,'orders'),{
-    customerName:name, phone:phone,
-    item:selectedProduct, timestamp:Date.now()
-  }).then(()=>{
-    showPanel(`${selectedProduct.name} захиалга амжилттай!`,true);
-    overlay.classList.remove('show'); orderPanel.classList.remove('show');
-  }).catch(err=>{ console.error("Firebase алдаа:",err); showPanel("Алдаа гарлаа",false); });
-});
-
-function showPanel(message,success){
-  panelMessage.textContent=message;
-  panelMessage.style.backgroundColor=success?"#00a600":"#aa0000";
-  panelMessage.classList.add("show");
-  setTimeout(()=>{panelMessage.classList.remove("show");},2500);
-}
-
-renderProducts();
-</script>
+      <button type="submit"
+        class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+        Захиалах
+      </button>
+    </form>
+  </div>
 
 </body>
 </html>
