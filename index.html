@@ -7,16 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
-body{background:#121212;color:#fff;}
-header{padding:20px;text-align:center;}
-header img{width:180px;}
-.container{display:flex;justify-content:center;align-items:center;min-height:80vh;}
-.card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 20px rgba(0,0,0,0.5);}
+body{background:#121212;color:#fff;overflow-x:hidden;}
+header{padding:30px 20px;text-align:center;}
+header img{width:90px;transition: transform 0.5s;}
+header img:hover{transform: scale(1.2);}
+.container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
+.card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 25px rgba(0,0,0,0.5);transform: translateY(-50px);opacity:0;animation: slideDown 0.8s forwards;}
+@keyframes slideDown{to{transform: translateY(0);opacity:1;}}
 .card h2{text-align:center;margin-bottom:30px;}
 .card input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#333;color:#fff;}
 .card input::placeholder{color:#bbb;}
 .card button{width:100%;padding:12px;margin-top:20px;border:none;border-radius:8px;background:#ff5252;color:white;font-weight:bold;cursor:pointer;transition:.3s;}
-.card button:hover{background:#ff1744;}
+.card button:hover{background:#ff1744;transform: scale(1.05);}
 .switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
 .switch:hover{text-decoration:underline;}
 </style>
