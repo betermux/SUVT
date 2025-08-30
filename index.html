@@ -39,6 +39,7 @@ header img:hover{transform: scale(1.2);}
 <img src="assets/khalk.png" alt="Khalk Store Logo">
 </header>
 
+<!-- Auth Container -->
 <div class="container" id="auth-container">
 <div class="card" id="auth-card">
 <h2 id="auth-title">Нэвтрэх</h2>
@@ -49,6 +50,7 @@ header img:hover{transform: scale(1.2);}
 </div>
 </div>
 
+<!-- Shop Container -->
 <div class="shop-container" id="shop-container">
 <h2 class="shop-title">Бараа</h2>
 <div class="products">
@@ -71,6 +73,7 @@ header img:hover{transform: scale(1.2);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
   authDomain: "khalkh-store.firebaseapp.com",
@@ -85,6 +88,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+// Variables
+let currentUserPhone = null;
+
+// Auth logic
 const authTitle = document.getElementById('auth-title');
 const authButton = document.getElementById('auth-button');
 const switchAuth = document.getElementById('switch-auth');
@@ -103,6 +110,7 @@ switchAuth.addEventListener('click', () => {
   }
 });
 
+// Login / Register
 authButton.addEventListener('click', () => {
   const phone = document.getElementById('phone').value;
   const password = document.getElementById('password').value;
@@ -111,14 +119,15 @@ authButton.addEventListener('click', () => {
   const userRef = ref(database, 'users/' + phone);
 
   if(isLogin){
-    get(userRef).then((snapshot) => {
-      if(snapshot.exists()){
-        if(snapshot.val().password === password){
-          alert(`Амжилттай нэвтэрлээ: ${phone}`);
-          document.getElementById('auth-container').style.display = 'none';
-          document.getElementById('shop-container').style.display = 'block';
-        } else { alert('Нууц үг буруу!'); }
-      } else { alert('Энэ дугаараар бүртгэл олдсонгүй!'); }
+    get(userRef).then(snapshot => {
+      if(snapshot.exists() && snapshot.val().password === password){
+        currentUserPhone = phone;
+        document.getElementById('auth-container').style.display = 'none';
+        document.getElementById('shop-container').style.display = 'block';
+        alert(`Амжилттай нэвтэрлээ: ${phone}`);
+      } else {
+        alert('Дугаар эсвэл нууц үг буруу!');
+      }
     });
   } else {
     set(userRef, { password: password })
@@ -128,6 +137,22 @@ authButton.addEventListener('click', () => {
 
   document.getElementById('phone').value = '';
   document.getElementById('password').value = '';
+});
+
+// Add to cart logic
+document.querySelectorAll('.product-card button').forEach((btn)=>{
+  btn.addEventListener('click', ()=>{
+    if(!currentUserPhone){ alert('Нэвтэрсэн байх шаардлагатай!'); return; }
+    const productName = btn.parentElement.querySelector('h3').innerText;
+    const productPrice = btn.parentElement.querySelector('p').innerText;
+
+    const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
+    get(cartRef).then(snapshot => {
+      let cart = snapshot.exists() ? snapshot.val() : [];
+      cart.push({ name: productName, price: productPrice });
+      set(cartRef, cart).then(()=> alert(`${productName} сагсанд нэмэгдлээ!`));
+    });
+  });
 });
 </script>
 </body>
