@@ -1,359 +1,255 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khalk Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
+body{background:#121212;color:#fff;overflow-x:hidden;position:relative;}
+header{
+    padding:30px 20px;
+    text-align:center;
+    position:relative;
+    height:100px;
+    display: flex; /* Use flexbox for better alignment */
+    justify-content: center; /* Default to center for auth screen */
+    align-items: center; /* Vertically align items */
 }
-body {
-  background: #121212;
-  color: #fff;
-  overflow-x: hidden;
-  position: relative;
+#logo{
+    width:120px;
+    transition: all 0.8s ease;
+    cursor:pointer;
+    flex-shrink: 0; /* Prevent logo from shrinking */
+    opacity: 0; /* Make logo invisible initially */
 }
-header {
-  padding: 30px 20px;
-  text-align: center;
-  position: relative;
-  height: 100px;
-  display: flex; /* Use flexbox for better alignment */
-  justify-content: center; /* Default to center for auth screen */
-  align-items: center; /* Vertically align items */
-}
-#logo {
-  width: 120px;
-  transition: all 0.8s ease;
-  cursor: pointer;
-  flex-shrink: 0; /* Prevent logo from shrinking */
-  opacity: 0; /* Make logo invisible initially */
-}
-#store-text {
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  margin-left: 2mm;
-  font-size: 1.5em;
-  font-weight: 700;
-  color: #fff;
-  white-space: nowrap;
-  user-select: none;
-  pointer-events: none;
-  display: inline-block;
-}
-#store-text.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-#user-phone {
-  font-size: 0.9em; /* Жижиг текст */
-  opacity: 0; /* Still hidden initially */
-  transition: opacity 0.8s ease;
-  font-weight: bold;
-  color: #fff;
-  margin-left: 20px; /* Add some space from the logo */
-  flex-grow: 1; /* Allow it to take available space */
-  text-align: center; /* Center the phone number if it takes up space */
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Show ellipsis for overflow */
+#user-phone{
+    font-size:0.9em; /* Жижиг текст */
+    opacity:0; /* Still hidden initially */
+    transition: opacity 0.8s ease;
+    font-weight:bold;
+    color:#fff;
+    margin-left: 20px; /* Add some space from the logo */
+    flex-grow: 1; /* Allow it to take available space */
+    text-align: center; /* Center the phone number if it takes up space */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
 }
 
 /* New Cart Icon/Button */
 #cart-icon {
-  font-size: 1.2em;
-  cursor: pointer;
-  color: #fff;
-  font-weight: bold;
-  padding: 8px 12px; /* Slightly reduced padding for emoji only */
-  border-radius: 8px;
-  background: #ff5252; /* Match button style */
-  transition: background 0.3s;
-  display: none; /* Hidden until logged in */
-  flex-shrink: 0; /* Prevent cart icon from shrinking */
-  margin-left: 20px; /* Add some space from user-phone */
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 12px; /* Slightly reduced padding for emoji only */
+    border-radius: 8px;
+    background: #ff5252; /* Match button style */
+    transition: background 0.3s;
+    display: none; /* Hidden until logged in */
+    flex-shrink: 0; /* Prevent cart icon from shrinking */
+    margin-left: 20px; /* Add some space from user-phone */
 }
 #cart-icon:hover {
-  background: #ff1744;
+    background: #ff1744;
 }
 
 /* Style for header when shop is active (after login) */
 body.shop-active header {
-  justify-content: space-between; /* Space out logo, user-phone, and cart */
+    justify-content: space-between; /* Space out logo, user-phone, and cart */
 }
 body.shop-active #logo {
-  width: 50px; /* Shrink logo */
-  opacity: 1; /* Make logo visible */
+    width: 50px; /* Shrink logo */
+    opacity: 1; /* Make logo visible */
 }
 body.shop-active #user-phone {
-  opacity: 1; /* Show user phone */
+    opacity: 1; /* Show user phone */
 }
 body.shop-active #cart-icon {
-  display: block; /* Show cart icon */
+    display: block; /* Show cart icon */
 }
+
 
 /* Auth */
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 90vh;
-  padding-top: 50px;
-}
-.card {
-  background: #1e1e1e;
-  padding: 40px;
-  border-radius: 15px;
-  width: 350px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-  transform: translateY(-50px);
-  opacity: 0;
-  animation: slideDown 0.8s forwards;
-}
-@keyframes slideDown {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.card h2 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.card input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: none;
-  background: #333;
-  color: #fff;
-}
-.card input::placeholder {
-  color: #bbb;
-}
-.card button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 8px;
-  background: #ff5252;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.card button:hover {
-  background: #ff1744;
-  transform: scale(1.05);
-}
-.switch {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 0.9em;
-  cursor: pointer;
-  color: #ffebee;
-}
-.switch:hover {
-  text-decoration: underline;
-}
+.container{display:flex;justify-content:center;align-items:flex-start;min-height:90vh;padding-top:50px;}
+.card{background:#1e1e1e;padding:40px;border-radius:15px;width:350px;box-shadow:0 5px 25px rgba(0,0,0,0.5);transform: translateY(-50px);opacity:0;animation: slideDown 0.8s forwards;}
+@keyframes slideDown{to{transform: translateY(0);opacity:1;}}
+.card h2{text-align:center;margin-bottom:30px;}
+.card input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#333;color:#fff;}
+.card input::placeholder{color:#bbb;}
+.card button{width:100%;padding:12px;margin-top:20px;border:none;border-radius:8px;background:#ff5252;color:white;font-weight:bold;cursor:pointer;transition:.3s;}
+.card button:hover{background:#ff1744;transform: scale(1.05);}
+.switch{text-align:center;margin-top:15px;font-size:.9em;cursor:pointer;color:#ffebee;}
+.switch:hover{text-decoration:underline;}
 
 /* Shop */
-.shop-container {
-  padding: 40px;
-  color: #fff;
-  display: none;
+.shop-container{padding:40px;color:#fff;display:none;}
+.shop-title{text-align:center;font-size:2em;margin-bottom:30px;}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+.product-card{
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Push button to bottom */
 }
-.shop-title {
-  text-align: center;
-  font-size: 2em;
-  margin-bottom: 30px;
+.product-card:hover{transform: translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.5);}
+.product-card img{width:100%;border-radius:10px;margin-bottom:15px;}
+.product-card h3{
+    margin-bottom:10px;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
 }
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+.product-card p{
+    margin-bottom:15px;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
 }
-.product-card {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-  display: flex; /* Use flexbox for internal layout */
-  flex-direction: column; /* Stack items vertically */
-  justify-content: space-between; /* Push button to bottom */
+.product-card button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    background:#ff5252;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+    margin-top: auto; /* Push button to the bottom of the flex container */
 }
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-.product-card img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-.product-card h3 {
-  margin-bottom: 10px;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Show ellipsis for overflow */
-}
-.product-card p {
-  margin-bottom: 15px;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Show ellipsis for overflow */
-}
-.product-card button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  background: #ff5252;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: auto; /* Push button to the bottom of the flex container */
-}
-.product-card button:hover {
-  background: #ff1744;
-}
+.product-card button:hover{background:#ff1744;}
 
 /* Cart popup - Adjusted Positioning */
-#cart-popup {
-  display: none;
-  position: absolute;
-  top: 70px; /* Aligned with header height */
-  right: 20px; /* Positioned to the right */
-  width: 300px;
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-  color: #fff;
-  z-index: 100;
+#cart-popup{
+    display:none;
+    position:absolute;
+    top: 70px; /* Aligned with header height */
+    right: 20px; /* Positioned to the right */
+    width:300px;
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.5);
+    color:#fff;
+    z-index:100;
 }
-#cart-items div {
-  margin-bottom: 8px;
-}
+#cart-items div{margin-bottom:8px;}
 #cart-total {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #333;
-  font-weight: bold;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+    font-weight: bold;
 }
 
 /* Custom Alerts */
 #alert-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000; /* Ensure it's on top of everything */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center alerts horizontally */
-  padding-top: 10px;
-  pointer-events: none; /* Allow clicks to pass through the container */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's on top of everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center alerts horizontally */
+    padding-top: 10px;
+    pointer-events: none; /* Allow clicks to pass through the container */
 }
 
 .custom-alert {
-  padding: 12px 25px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  font-weight: bold;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: auto; /* Re-enable pointer events for the alert itself */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  max-width: 90%; /* Prevent alerts from being too wide on large screens */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    padding: 12px 25px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: auto; /* Re-enable pointer events for the alert itself */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    max-width: 90%; /* Prevent alerts from being too wide on large screens */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 .custom-alert.show {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .custom-alert.success {
-  background-color: rgba(76, 175, 80, 0.1); /* Light green background */
-  color: #4caf50; /* Green text */
-  border: 1px solid #4caf50; /* Green outline */
+    background-color: rgba(76, 175, 80, 0.1); /* Light green background */
+    color: #4CAF50; /* Green text */
+    border: 1px solid #4CAF50; /* Green outline */
 }
 
 .custom-alert.failure {
-  background-color: rgba(244, 67, 54, 0.1); /* Light red background */
-  color: #f44336; /* Red text */
-  border: 1px solid #f44336; /* Red outline */
+    background-color: rgba(244, 67, 54, 0.1); /* Light red background */
+    color: #F44336; /* Red text */
+    border: 1px solid #F44336; /* Red outline */
 }
 </style>
 </head>
 <body>
 <div id="alert-container"></div> <!-- New alert container -->
 <header>
-  <img src="assets/khalk.png" alt="Khalk Store Logo" id="logo" />
-  <span id="store-text">Khalk store</span>
-  <div id="user-phone"></div>
-  <div id="cart-icon">🛒 <span id="cart-count">0</span></div>
+    <img src="assets/khalk.png" alt="Khalk Store Logo" id="logo">
+    <div id="user-phone"></div>
+    <div id="cart-icon">🛒 <span id="cart-count">0</span></div>
 </header>
 
 <!-- Auth Container -->
 <div class="container" id="auth-container">
-  <div class="card" id="auth-card">
-    <h2 id="auth-title">Нэвтрэх</h2>
-    <input type="tel" id="phone" placeholder="Утасны дугаар" />
-    <input type="password" id="password" placeholder="Нууц үг" />
-    <button id="auth-button">Нэвтрэх</button>
-    <div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
-  </div>
+    <div class="card" id="auth-card">
+        <h2 id="auth-title">Нэвтрэх</h2>
+        <input type="tel" id="phone" placeholder="Утасны дугаар">
+        <input type="password" id="password" placeholder="Нууц үг">
+        <button id="auth-button">Нэвтрэх</button>
+        <div class="switch" id="switch-auth">Бүртгүүлэх бол энд дарна уу</div>
+    </div>
 </div>
 
 <!-- Shop Container -->
 <div class="shop-container" id="shop-container">
-  <h2 class="shop-title"></h2>
-  <div class="products">
-    <div class="product-card">
-      <img src="assets/product1.png" alt="Бараа 1" />
-      <h3>Бараа 1</h3>
-      <p data-price="150000">Үнэ: 150,000₮</p>
-      <button>Сагсанд нэмэх</button>
+    <h2 class="shop-title"></h2>
+    <div class="products">
+        <div class="product-card">
+            <img src="assets/product1.png" alt="Бараа 1">
+            <h3>Бараа 1</h3>
+            <p data-price="150000">Үнэ: 150,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+        <div class="product-card">
+            <img src="assets/product2.png" alt="Бараа 2">
+            <h3>Бараа 2</h3>
+            <p data-price="200000">Үнэ: 200,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+        <!-- Add more product cards as needed -->
+        <div class="product-card">
+            <img src="assets/product3.png" alt="Бараа 3">
+            <h3>Бараа 3</h3>
+            <p data-price="50000">Үнэ: 50,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
+        <div class="product-card">
+            <img src="assets/product4.png" alt="Бараа 4">
+            <h3>Бараа 4</h3>
+            <p data-price="120000">Үнэ: 120,000₮</p>
+            <button>Сагсанд нэмэх</button>
+        </div>
     </div>
-    <div class="product-card">
-      <img src="assets/product2.png" alt="Бараа 2" />
-      <h3>Бараа 2</h3>
-      <p data-price="200000">Үнэ: 200,000₮</p>
-      <button>Сагсанд нэмэх</button>
-    </div>
-    <div class="product-card">
-      <img src="assets/product3.png" alt="Бараа 3" />
-      <h3>Бараа 3</h3>
-      <p data-price="50000">Үнэ: 50,000₮</p>
-      <button>Сагсанд нэмэх</button>
-    </div>
-    <div class="product-card">
-      <img src="assets/product4.png" alt="Бараа 4" />
-      <h3>Бараа 4</h3>
-      <p data-price="120000">Үнэ: 120,000₮</p>
-      <button>Сагсанд нэмэх</button>
-    </div>
-  </div>
 </div>
 
 <!-- Cart Popup -->
 <div id="cart-popup">
-  <h3>Сагс</h3>
-  <div id="cart-items"></div>
-  <div id="cart-total">Нийт: 0₮</div>
+    <h3>Сагс</h3>
+    <div id="cart-items"></div>
+    <div id="cart-total">Нийт: 0₮</div>
 </div>
 
 <script type="module">
@@ -369,128 +265,197 @@ const firebaseConfig = {
   storageBucket: "khalkh-store.firebasestorage.app",
   messagingSenderId: "205879441792",
   appId: "1:205879441792:web:677a6abe7912d6436a2965",
-  measurementId: "G-6M9HZM8G9N",
+  measurementId: "G-6M9HZM8G9N"
 };
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-let currentUser Phone = null;
+let currentUserPhone = null;
 let userCart = []; // Local cache for the user's cart
 
 // Elements
-const authTitle = document.getElementById("auth-title");
-const authButton = document.getElementById("auth-button");
-const switchAuth = document.getElementById("switch-auth");
-const userPhoneDiv = document.getElementById("user-phone");
-const logo = document.getElementById("logo");
-const storeText = document.getElementById("store-text");
-const cartPopup = document.getElementById("cart-popup");
-const cartItemsDiv = document.getElementById("cart-items");
-const cartTotalDiv = document.getElementById("cart-total"); // New element for total
-const cartIcon = document.getElementById("cart-icon"); // New cart icon
-const cartCountSpan = document.getElementById("cart-count"); // New cart count span
-const shopContainer = document.getElementById("shop-container"); // Get shop container
+const authTitle = document.getElementById('auth-title');
+const authButton = document.getElementById('auth-button');
+const switchAuth = document.getElementById('switch-auth');
+const userPhoneDiv = document.getElementById('user-phone');
+const logo = document.getElementById('logo');
+const cartPopup = document.getElementById('cart-popup');
+const cartItemsDiv = document.getElementById('cart-items');
+const cartTotalDiv = document.getElementById('cart-total'); // New element for total
+const cartIcon = document.getElementById('cart-icon'); // New cart icon
+const cartCountSpan = document.getElementById('cart-count'); // New cart count span
+const shopContainer = document.getElementById('shop-container'); // Get shop container
 
 let isLogin = true;
 
 // --- Functions ---
 
 // New function to display custom alerts
-function showCustomAlert(message, type = "success", duration = 3000) {
-  const alertContainer = document.getElementById("alert-container");
-  const alertDiv = document.createElement("div");
-  alertDiv.className = `custom-alert ${type}`;
-  alertDiv.textContent = message;
+function showCustomAlert(message, type = 'success', duration = 3000) {
+    const alertContainer = document.getElementById('alert-container');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `custom-alert ${type}`;
+    alertDiv.textContent = message;
 
-  alertContainer.appendChild(alertDiv);
+    alertContainer.appendChild(alertDiv);
 
-  // Trigger animation
-  setTimeout(() => {
-    alertDiv.classList.add("show");
-  }, 10); // Small delay to ensure CSS transition applies
+    // Trigger animation
+    setTimeout(() => {
+        alertDiv.classList.add('show');
+    }, 10); // Small delay to ensure CSS transition applies
 
-  // Hide and remove after duration
-  setTimeout(() => {
-    alertDiv.classList.remove("show");
-    alertDiv.addEventListener(
-      "transitionend",
-      () => {
-        alertDiv.remove();
-      },
-      { once: true }
-    ); // Ensure it only runs once
-  }, duration);
+    // Hide and remove after duration
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        alertDiv.addEventListener('transitionend', () => {
+            alertDiv.remove();
+        }, { once: true }); // Ensure it only runs once
+    }, duration);
 }
+
 
 // Function to update cart display
 function updateCartDisplay() {
-  cartItemsDiv.innerHTML = "";
-  let total = 0;
-  if (userCart.length > 0) {
-    userCart.forEach((item) => {
-      const div = document.createElement("div");
-      div.textContent = `${item.name} - ${item.price.toLocaleString()}₮`; // Format price
-      cartItemsDiv.appendChild(div);
-      total += item.rawPrice; // Use raw price for calculation
-    });
-  } else {
-    cartItemsDiv.textContent = "Сагс хоосон байна";
-  }
-  cartTotalDiv.textContent = `Нийт: ${total.toLocaleString()}₮`;
-  cartCountSpan.textContent = userCart.length; // Update cart count
+    cartItemsDiv.innerHTML = '';
+    let total = 0;
+    if (userCart.length > 0) {
+        userCart.forEach(item => {
+            const div = document.createElement('div');
+            div.textContent = `${item.name} - ${item.price.toLocaleString()}₮`; // Format price
+            cartItemsDiv.appendChild(div);
+            total += item.rawPrice; // Use raw price for calculation
+        });
+    } else {
+        cartItemsDiv.textContent = 'Сагс хоосон байна';
+    }
+    cartTotalDiv.textContent = `Нийт: ${total.toLocaleString()}₮`;
+    cartCountSpan.textContent = userCart.length; // Update cart count
 }
 
 // Function to load cart from Firebase
 async function loadCartFromFirebase(phone) {
-  const cartRef = ref(database, "users/" + phone + "/cart");
-  const snapshot = await get(cartRef);
-  if (snapshot.exists()) {
-    userCart = snapshot.val();
-  } else {
-    userCart = [];
-  }
-  updateCartDisplay(); // Update UI after loading cart
+    const cartRef = ref(database, 'users/' + phone + '/cart');
+    const snapshot = await get(cartRef);
+    if (snapshot.exists()) {
+        userCart = snapshot.val();
+    } else {
+        userCart = [];
+    }
+    updateCartDisplay(); // Update UI after loading cart
 }
 
 // --- Event Listeners ---
 
 // Switch login/register
-switchAuth.addEventListener("click", () => {
+switchAuth.addEventListener('click', () => {
   isLogin = !isLogin;
-  authTitle.textContent = isLogin ? "Нэвтрэх" : "Бүртгүүлэх";
-  authButton.textContent = isLogin ? "Нэвтрэх" : "Бүртгүүлэх";
-  switchAuth.textContent = isLogin
-    ? "Бүртгүүлэх бол энд дарна уу"
-    : "Нэвтрэх бол энд дарна уу";
+  authTitle.textContent = isLogin ? 'Нэвтрэх' : 'Бүртгүүлэх';
+  authButton.textContent = isLogin ? 'Нэвтрэх' : 'Бүртгүүлэх';
+  switchAuth.textContent = isLogin ? 'Бүртгүүлэх бол энд дарна уу' : 'Нэвтрэх бол энд дарна уу';
 });
 
 // Login/Register
-authButton.addEventListener("click", async () => {
-  const phone = document.getElementById("phone").value;
-  const password = document.getElementById("password").value;
-  if (phone === "" || password === "") {
-    showCustomAlert("Бүх талбарыг бөглөнө үү!", "failure");
-    return;
-  }
+authButton.addEventListener('click', async () => {
+  const phone = document.getElementById('phone').value;
+  const password = document.getElementById('password').value;
+  if(phone === '' || password === '') { showCustomAlert('Бүх талбарыг бөглөнө үү!', 'failure'); return; }
 
-  const userRef = ref(database, "users/" + phone);
+  const userRef = ref(database, 'users/' + phone);
 
-  if (isLogin) {
+  if(isLogin){
     try {
       const snapshot = await get(userRef);
-      if (snapshot.exists() && snapshot.val().password === password) {
-        currentUser Phone = phone;
+      if(snapshot.exists() && snapshot.val().password === password){
+        currentUserPhone = phone;
 
         // Add class to body to trigger shop-active styles
-        document.body.classList.add("shop-active");
-        logo.style.opacity = "1"; // Make logo visible on login
+        document.body.classList.add('shop-active');
+        logo.style.opacity = '1'; // Make logo visible on login
 
         // Auth → Shop
-        document.getElementById("auth-container").style.display = "none";
-        shopContainer.style.display = "block";
-        showCustomAlert(`Амжилттай нэвтэрлээ: ${phone}`, "success");
+        document.getElementById('auth-container').style.display = 'none';
+        shopContainer.style.display = 'block';
+        showCustomAlert(`Амжилттай нэвтэрлээ: ${phone}`, 'success');
 
-        // Listen for logo width transition end to show store text
-        function onLogoTransitionEnd(e) {
-          if (e.propertyName === "width")
+        // Load user's cart immediately after login
+        await loadCartFromFirebase(currentUserPhone);
+
+      } else {
+        showCustomAlert('Дугаар эсвэл нууц үг буруу!', 'failure');
+      }
+    } catch (error) {
+        console.error("Login error:", error);
+        showCustomAlert('Нэвтрэхэд алдаа гарлаа!', 'failure');
+    }
+  } else {
+    try {
+      await set(userRef, { password: password });
+      showCustomAlert(`Амжилттай бүртгүүллээ: ${phone}`, 'success');
+    } catch (error) {
+      console.error("Registration error:", error);
+      showCustomAlert('Бүртгүүлэхэд алдаа гарлаа!', 'failure');
+    }
+  }
+
+  document.getElementById('phone').value = '';
+  document.getElementById('password').value = '';
+});
+
+// Add to cart
+document.querySelectorAll('.product-card button').forEach((btn)=>{
+  btn.addEventListener('click', async ()=>{
+    if(!currentUserPhone){ showCustomAlert('Нэвтэрсэн байх шаардлагатай!', 'failure'); return; }
+
+    const productCard = btn.parentElement;
+    const productName = productCard.querySelector('h3').innerText;
+    const productPriceText = productCard.querySelector('p').innerText; // e.g., "Үнэ: 150,000₮"
+    const rawPrice = parseInt(productCard.querySelector('p').dataset.price); // Get raw number from data-price
+
+    const cartItem = {
+        name: productName,
+        price: productPriceText.replace('Үнэ: ', ''), // Store formatted price for display
+        rawPrice: rawPrice // Store raw price for calculations
+    };
+
+    userCart.push(cartItem); // Add to local cache
+    updateCartDisplay(); // Update UI immediately
+
+    const cartRef = ref(database, 'users/' + currentUserPhone + '/cart');
+    try {
+        await set(cartRef, userCart); // Save the entire updated cart array
+        showCustomAlert(`${productName} сагсанд нэмэгдлээ!`, 'success');
+    } catch (error) {
+        console.error("Error adding to cart:", error);
+        showCustomAlert('Сагсанд нэмэхэд алдаа гарлаа!', 'failure');
+    }
+  });
+});
+
+// Cart icon click → toggle cart popup
+cartIcon.addEventListener('click', ()=>{
+  if(!currentUserPhone) return; // Should not happen if icon is hidden when not logged in
+  cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
+  // No need to load from Firebase here, as userCart is kept in sync
+});
+
+// Optional: Close cart popup if clicked outside
+document.addEventListener('click', (event) => {
+    if (cartPopup.style.display === 'block' &&
+        !cartPopup.contains(event.target) &&
+        !cartIcon.contains(event.target) &&
+        event.target !== logo) { // Exclude logo if it still has some cart-related function
+        cartPopup.style.display = 'none';
+    }
+});
+
+// Logo click behavior (reverted to original, no cart function)
+logo.addEventListener('click', () => {
+    // You can add a different behavior for the logo here, or remove this listener if not needed.
+    // For now, it just prevents the cart from opening if clicked.
+    // If you want the logo to navigate to home, you'd add: window.location.href = '/';
+});
+
+</script>
+</body>
+</html>
