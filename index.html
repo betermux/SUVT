@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khalk Shop</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khalk Shop</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; background:#0b0b0b; color:#fff; margin:0; padding:0;}
+header { background:#d32f2f; color:#fff; text-align:center; padding:14px 0; font-size:1.5rem; font-weight:bold;}
+.container { padding:16px;}
+input, button { width:100%; padding:10px; margin:6px 0; border-radius:6px; border:none; }
+button { background:#d32f2f; color:#fff; cursor:pointer; font-weight:bold; }
+ul { list-style:none; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; }
+li { background:#111; border-radius:10px; padding:12px; text-align:center; transition: transform 0.2s ease; }
+li:hover { transform: scale(1.05); }
+img { width:100%; border-radius:8px; margin-bottom:8px; }
+b { display:block; margin-bottom:4px; font-size:1.1rem; }
+.price { color:#d32f2f; font-weight:bold; }
+.login-section { max-width:300px; margin:16px auto; }
+</style>
 </head>
 <body>
-  <h1>Khalk Shop</h1>
-  <ul id="productGrid"></ul>
+
+<header>Khalk Shop</header>
+
+<div class="container">
+
+<div class="login-section">
+<h3>Нэвтрэх</h3>
+<input type="text" id="phone" placeholder="Утасны дугаар">
+<input type="password" id="password" placeholder="Нууц үг">
+<button onclick="login()">Нэвтрэх</button>
+</div>
+
+<h3>Дэлгүүр</h3>
+<ul id="productGrid"></ul>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref as dbRef, push, onValue, get, child } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
@@ -27,21 +53,55 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Бараа унших
-const productRef = ref(database, "products");
-onValue(productRef, snapshot => {
-  const list = document.getElementById("productGrid");
-  list.innerHTML = "";
-  snapshot.forEach(child => {
-    const data = child.val();
-    const li = document.createElement("li");
-    li.innerHTML = `<img src="${data.image}" width="100"><br>
-                    <b>${data.name}</b><br>
-                    ${data.desc}<br>
-                    ${data.price}₮`;
-    list.appendChild(li);
-  });
+// --- Бараанууд assets folder-д ---
+const products = [
+  {img:'assets/product1.jpg', name:'Бараа 1', price:25000},
+  {img:'assets/product2.jpg', name:'Бараа 2', price:45000},
+  {img:'assets/product3.jpg', name:'Бараа 3', price:32000},
+  {img:'assets/product4.jpg', name:'Бараа 4', price:28000},
+];
+
+// --- Дэлгүүрт харуулах ---
+const grid = document.getElementById("productGrid");
+products.forEach(p=>{
+  const li=document.createElement("li");
+  li.innerHTML=`<img src="${p.img}"><b>${p.name}</b><span class="price">${p.price}₮</span>`;
+  grid.appendChild(li);
 });
+
+// --- Хэрэглэгч нэвтрэх ---
+function login(){
+  const phone=document.getElementById("phone").value.trim();
+  const pwd=document.getElementById("password").value.trim();
+  if(!phone || !pwd){ alert("Бүх талбарыг бөглөнө үү"); return; }
+
+  const userRef = dbRef(database, 'users/'+phone);
+  get(userRef).then(snapshot=>{
+    if(snapshot.exists()){
+      const data = snapshot.val();
+      if(data.password===pwd){
+        alert("Амжилттай нэвтэрлээ");
+      } else {
+        alert("Нууц үг буруу");
+      }
+    } else {
+      // Хэрэв шинэ хэрэглэгч бол үүсгэх
+      push(dbRef(database,'users/'+phone),{password:pwd, orders:[]});
+      alert("Шинэ хэрэглэгч үүсгэгдлээ");
+    }
+  }).catch(err=>{ console.error(err); alert("Алдаа гарлаа"); });
+}
+
+// --- Жишээ: хэрэглэгч бараа захиалсан үед хадгалах функц ---
+function orderProduct(phone, productName, productPrice){
+  const orderRef = dbRef(database, 'users/'+phone+'/orders');
+  push(orderRef, {productName, productPrice, time:new Date().toISOString()});
+}
+
+// Тест: orderProduct("99112233","Бараа 1",25000);
+
 </script>
+
+</div>
 </body>
 </html>
