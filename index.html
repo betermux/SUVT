@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Snake.io Simple</title>
+  <title>Snake.io Touch</title>
   <style>
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -24,15 +25,54 @@
       color: white;
       font-family: sans-serif;
     }
+    /* Joystick buttons */
+    .joystick {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 60px 60px 60px;
+      grid-template-rows: 60px 60px 60px;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #444;
+      color: white;
+      font-size: 24px;
+      border: none;
+    }
+    .btn:active {
+      background: limegreen;
+    }
+    .empty {
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
   <div id="score">Score: 0</div>
   <canvas id="game" width="600" height="600"></canvas>
+
+  <!-- Joystick -->
+  <div class="joystick">
+    <div class="empty"></div>
+    <button class="btn" id="up">⬆️</button>
+    <div class="empty"></div>
+    <button class="btn" id="left">⬅️</button>
+    <div class="empty"></div>
+    <button class="btn" id="right">➡️</button>
+    <div class="empty"></div>
+    <button class="btn" id="down">⬇️</button>
+    <div class="empty"></div>
+  </div>
+
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
-    const box = 20; // нэг квадратын хэмжээ
+    const box = 20;
     let snake = [{ x: 9 * box, y: 10 * box }];
     let direction;
     let food = {
@@ -41,6 +81,7 @@
     };
     let score = 0;
 
+    // Keyboard controls
     document.addEventListener("keydown", setDir);
 
     function setDir(e) {
@@ -49,6 +90,12 @@
       else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
       else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
     }
+
+    // Touch joystick controls
+    document.getElementById("up").onclick = () => { if (direction !== "DOWN") direction = "UP"; };
+    document.getElementById("down").onclick = () => { if (direction !== "UP") direction = "DOWN"; };
+    document.getElementById("left").onclick = () => { if (direction !== "RIGHT") direction = "LEFT"; };
+    document.getElementById("right").onclick = () => { if (direction !== "LEFT") direction = "RIGHT"; };
 
     function draw() {
       ctx.fillStyle = "#222";
@@ -72,7 +119,7 @@
       if (direction === "RIGHT") snakeX += box;
       if (direction === "DOWN") snakeY += box;
 
-      // Хоол идэх
+      // Eat food
       if (snakeX === food.x && snakeY === food.y) {
         score++;
         document.getElementById("score").innerText = "Score: " + score;
@@ -86,7 +133,7 @@
 
       let newHead = { x: snakeX, y: snakeY };
 
-      // Game over нөхцөл
+      // Game over
       if (
         snakeX < 0 ||
         snakeY < 0 ||
