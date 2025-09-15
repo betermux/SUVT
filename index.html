@@ -1,271 +1,116 @@
 <!DOCTYPE html>
-<html lang="mn">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Admin - Khalk Store</title>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #000;
-    color: #fff;
-  }
-  header {
-    background: #222;
-    padding: 20px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #f00;
-    border-bottom: 2px solid #f00;
-  }
-  .search-container {
-    margin: 20px;
-    text-align: center;
-  }
-  #search {
-    padding: 10px;
-    width: 300px;
-    border: 2px solid #f00;
-    background: #333;
-    color: #fff;
-    font-size: 16px;
-  }
-  #search:focus {
-    outline: none;
-    border-color: #ff4d4d;
-  }
-  table {
-    width: 95%;
-    border-collapse: collapse;
-    margin: 20px auto;
-    background: #222;
-    border: 1px solid #f00;
-  }
-  th,
-  td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #444;
-  }
-  th {
-    background: #f00;
-    color: #000;
-  }
-  .product-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-  }
-  .btn-approve {
-    background: #f00;
-    color: #000;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease;
-  }
-  .btn-approve:hover {
-    background: #ff4d4d;
-  }
-  h2 {
-    color: #f00;
-    margin-left: 20px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Snake.io Simple</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+      margin: 0;
+    }
+    canvas {
+      background: #222;
+      border: 2px solid #555;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+      color: white;
+      font-family: sans-serif;
+    }
+  </style>
 </head>
 <body>
+  <div id="score">Score: 0</div>
+  <canvas id="game" width="600" height="600"></canvas>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const box = 20; // нэг квадратын хэмжээ
+    let snake = [{ x: 9 * box, y: 10 * box }];
+    let direction;
+    let food = {
+      x: Math.floor(Math.random() * 29) * box,
+      y: Math.floor(Math.random() * 29) * box,
+    };
+    let score = 0;
 
-<header>Admin - Khalk Store Захиалгын Панел</header>
+    document.addEventListener("keydown", setDir);
 
-<div class="search-container">
-  <input type="text" id="search" placeholder="Код эсвэл дүнгээр хайх..." />
-</div>
-
-<h2>Зөвшөөрөгдөөгүй захиалгууд</h2>
-<table id="orderTable">
-  <thead>
-    <tr>
-      <th>Код</th>
-      <th>Бараа</th>
-      <th>Дүн</th>
-      <th>Огноо</th>
-      <th>Үйлдэл</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<h2>Зөвшөөрөгдсөн захиалгууд</h2>
-<table id="approvedOrderTable">
-  <thead>
-    <tr>
-      <th>Код</th>
-      <th>Бараа</th>
-      <th>Дүн</th>
-      <th>Огноо</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<script>
-  // Firebase тохиргоо
-  const firebaseConfig = {
-    apiKey: "AIzaSyAEybA-Ou_PGkZINDT-opzVPUlrr6XOU8E",
-    authDomain: "khalkh-store.firebaseapp.com",
-    databaseURL: "https://khalkh-store-default-rtdb.firebaseio.com",
-    projectId: "khalkh-store",
-    storageBucket: "khalkh-store.firebasestorage.app",
-    messagingSenderId: "205879441792",
-    appId: "1:205879441792:web:677a6abe7912d6436a2965",
-    measurementId: "G-6M9HZM8G9N"
-  };
-
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  const db = firebase.database();
-
-  let allOrders = [];
-  let approvedOrders = [];
-
-  // Захиалгуудыг унших
-  function loadOrders() {
-    db.ref('paymentCodes').once('value').then(snapshot => {
-      const orders = snapshot.val() || {};
-      allOrders = [];
-      const tbody = document.querySelector('#orderTable tbody');
-      tbody.innerHTML = '';
-
-      Object.keys(orders).forEach(code => {
-        const order = orders[code];
-        allOrders.push({ code, ...order });
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${code}</td>
-          <td><img src="assets/${order.image}" alt="${order.image}" class="product-img"></td>
-          <td>₮${order.amount}</td>
-          <td>${new Date(order.createdAt).toLocaleString('mn')}</td>
-          <td><button class="btn-approve" onclick="approveOrder('${code}')">Зөвшөөрөх</button></td>
-        `;
-        tbody.appendChild(row);
-      });
-    });
-  }
-
-  // Зөвшөөрөгдсөн захиалгуудыг унших
-  function loadApprovedOrders() {
-    db.ref('approvedOrders').once('value').then(snapshot => {
-      const orders = snapshot.val() || {};
-      approvedOrders = [];
-      const tbody = document.querySelector('#approvedOrderTable tbody');
-      tbody.innerHTML = '';
-
-      Object.keys(orders).forEach(code => {
-        const order = orders[code];
-        approvedOrders.push({ code, ...order });
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${code}</td>
-          <td><img src="assets/${order.image}" alt="${order.image}" class="product-img"></td>
-          <td>₮${order.amount}</td>
-          <td>${new Date(order.createdAt).toLocaleString('mn')}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    });
-  }
-
-  // Захиалгыг зөвшөөрөх функц
-  function approveOrder(code) {
-    db.ref('paymentCodes/' + code).once('value').then(snapshot => {
-      const orderData = snapshot.val();
-      if (!orderData) {
-        alert("Захиалга олдсонгүй");
-        return;
-      }
-      db.ref('approvedOrders/' + code).set(orderData).then(() => {
-        db.ref('paymentCodes/' + code).remove().then(() => {
-          alert("Захиалга зөвшөөрөгдлөө");
-          loadOrders();
-          loadApprovedOrders();
-        });
-      });
-    });
-  }
-
-  // Хайлтын функц
-  function searchOrders(query) {
-    query = query.toLowerCase();
-    // Зөвшөөрөгдөөгүй захиалгууд
-    const tbodyOrders = document.querySelector('#orderTable tbody');
-    tbodyOrders.innerHTML = '';
-    allOrders.forEach(order => {
-      if (
-        order.code.toLowerCase().includes(query) ||
-        order.amount.toString().includes(query)
-      ) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${order.code}</td>
-          <td><img src="assets/${order.image}" alt="${order.image}" class="product-img"></td>
-          <td>₮${order.amount}</td>
-          <td>${new Date(order.createdAt).toLocaleString('mn')}</td>
-          <td><button class="btn-approve" onclick="approveOrder('${order.code}')">Зөвшөөрөх</button></td>
-        `;
-        tbodyOrders.appendChild(row);
-      }
-    });
-
-    // Зөвшөөрөгдсөн захиалгууд
-    const tbodyApproved = document.querySelector('#approvedOrderTable tbody');
-    tbodyApproved.innerHTML = '';
-    approvedOrders.forEach(order => {
-      if (
-        order.code.toLowerCase().includes(query) ||
-        order.amount.toString().includes(query)
-      ) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${order.code}</td>
-          <td><img src="assets/${order.image}" alt="${order.image}" class="product-img"></td>
-          <td>₮${order.amount}</td>
-          <td>${new Date(order.createdAt).toLocaleString('mn')}</td>
-        `;
-        tbodyApproved.appendChild(row);
-      }
-    });
-  }
-
-  document.getElementById('search').addEventListener('input', e => {
-    const val = e.target.value.trim();
-    if (val === '') {
-      loadOrders();
-      loadApprovedOrders();
-    } else {
-      searchOrders(val);
+    function setDir(e) {
+      if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+      else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+      else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+      else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
     }
-  });
 
-  // Анхны ачаалалт
-  loadOrders();
-  loadApprovedOrders();
+    function draw() {
+      ctx.fillStyle = "#222";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Realtime шинэчлэлтүүдийг хянах
-  db.ref('paymentCodes').on('child_added', loadOrders);
-  db.ref('paymentCodes').on('child_removed', loadOrders);
-  db.ref('approvedOrders').on('child_added', loadApprovedOrders);
-  db.ref('approvedOrders').on('child_removed', loadApprovedOrders);
-</script>
+      // Food
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x, food.y, box, box);
 
+      // Snake
+      for (let i = 0; i < snake.length; i++) {
+        ctx.fillStyle = i === 0 ? "lime" : "green";
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      }
+
+      let snakeX = snake[0].x;
+      let snakeY = snake[0].y;
+
+      if (direction === "LEFT") snakeX -= box;
+      if (direction === "UP") snakeY -= box;
+      if (direction === "RIGHT") snakeX += box;
+      if (direction === "DOWN") snakeY += box;
+
+      // Хоол идэх
+      if (snakeX === food.x && snakeY === food.y) {
+        score++;
+        document.getElementById("score").innerText = "Score: " + score;
+        food = {
+          x: Math.floor(Math.random() * 29) * box,
+          y: Math.floor(Math.random() * 29) * box,
+        };
+      } else {
+        snake.pop();
+      }
+
+      let newHead = { x: snakeX, y: snakeY };
+
+      // Game over нөхцөл
+      if (
+        snakeX < 0 ||
+        snakeY < 0 ||
+        snakeX >= canvas.width ||
+        snakeY >= canvas.height ||
+        collision(newHead, snake)
+      ) {
+        clearInterval(game);
+        alert("Game Over! Final Score: " + score);
+      }
+
+      snake.unshift(newHead);
+    }
+
+    function collision(head, array) {
+      for (let i = 0; i < array.length; i++) {
+        if (head.x === array[i].x && head.y === array[i].y) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    let game = setInterval(draw, 120);
+  </script>
 </body>
 </html>
